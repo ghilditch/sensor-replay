@@ -1,0 +1,39 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Visualizer.qml</file>
+        <file>visualizer.js</file>
+        <file>three.js</file>
+        <file>models/body.json</file>
+        <file>models/lowerArm.L.json</file>
+        <file>models/lowerArm.R.json</file>
+        <file>models/lowerLeg.L.json</file>
+        <file>models/lowerLeg.R.json</file>
+        <file>models/upperArm.L.json</file>
+        <file>models/upperArm.R.json</file>
+        <file>models/upperLeg.L.json</file>
+        <file>models/upperLeg.R.json</file>
+        <file>images/pausehoverpressed.png</file>
+        <file>images/pausenormal.png</file>
+        <file>images/playhoverpressed.png</file>
+        <file>images/playnormal.png</file>
+        <file>images/stopdisabled.png</file>
+        <file>images/stophoverpressed.png</file>
+        <file>images/stopnormal.png</file>
+        <file>FpsDisplay.qml</file>
+        <file>InfoSheet.qml</file>
+        <file>StyledSlider.qml</file>
+        <file>textures/qtlogosmall.png</file>
+        <file>ControlEventSource.qml</file>
+        <file>images/all-sports.png</file>
+        <file>images/biking.jpg</file>
+        <file>images/running.jpg</file>
+        <file>images/sports.png</file>
+        <file>images/swimming.jpg</file>
+        <file>Workouts.qml</file>
+        <file>WorkoutDelegate.qml</file>
+        <file>ScrollBar.qml</file>
+        <file>BusyIndicator.qml</file>
+        <file>images/busy.png</file>
+        <file>images/scrollbar.png</file>
+    </qresource>
+</RCC>
