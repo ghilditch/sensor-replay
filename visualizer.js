@@ -81,9 +81,6 @@ function initializeGL(canvas, eventSource, mainView) {
     createGrid();
 
     loadBikerMesh();
-    //loadAtheleteMeshes();
-
-    //camera.lookAt ( scene.position );
 }
 
 var moveCamera = function (h,v,d) {
@@ -122,23 +119,6 @@ function createGrid(){
     scene.add (lines);
 }
 
-function addMeshToScene(mesh){
-    mesh.scale.set(10,10,10);
-    mesh.position.set (0,0,0);
-    //mesh.matrixAutoUpdate = false;
-    //mesh.rotation.set(new THREE.Vector3( 0, 0, Math.PI / 2));
-    //mesh.rotation.y = Math.PI / 2;
-    //mesh.rotation.x = Math.PI / 4;
-    scene.add( mesh );
-    // increment the body_parts
-    body_part_cnt++;
-    // Check if we are good to good
-    if (isAtheleteLoaded()){
-       onRotateCamera(0);
-    }
-
-}
-
 function loadBikerMesh(){
     var request = new XMLHttpRequest();
     request.open("GET", "models/biker.json");
@@ -174,98 +154,6 @@ function initBikePosition(){
     setArms();
     setRLeg(45);
     setLLeg(95);
-}
-
-function loadAtheleteMeshes(){
-    var request = new XMLHttpRequest();
-    request.open("GET", "models/body.json");
-    request.onreadystatechange = function () {
-        if (request.readyState === XMLHttpRequest.DONE) {
-            var loader = new THREE.JSONLoader();
-            loader.load( JSON.parse(request.responseText), addBodyToScene );
-        }
-    }
-    request.send();
-
-    var request2 = new XMLHttpRequest();
-    request2.open("GET", "models/upperArm.L.json");
-    request2.onreadystatechange = function () {
-        if (request2.readyState === XMLHttpRequest.DONE) {
-            var loader = new THREE.JSONLoader();
-            loader.load( JSON.parse(request2.responseText), addupperArmLToScene );
-        }
-    }
-    request2.send();
-
-    var request3 = new XMLHttpRequest();
-    request3.open("GET", "models/upperArm.R.json");
-    request3.onreadystatechange = function () {
-        if (request3.readyState === XMLHttpRequest.DONE) {
-            var loader = new THREE.JSONLoader();
-            loader.load( JSON.parse(request3.responseText), addupperArmRToScene );
-        }
-    }
-    request3.send();
-
-    var request4 = new XMLHttpRequest();
-    request4.open("GET", "models/lowerArm.L.json");
-    request4.onreadystatechange = function () {
-        if (request4.readyState === XMLHttpRequest.DONE) {
-            var loader = new THREE.JSONLoader();
-            loader.load( JSON.parse(request4.responseText), addlowerArmLToScene );
-        }
-    }
-    request4.send();
-
-    var request5 = new XMLHttpRequest();
-    request5.open("GET", "models/lowerArm.R.json");
-    request5.onreadystatechange = function () {
-        if (request5.readyState === XMLHttpRequest.DONE) {
-            var loader = new THREE.JSONLoader();
-            loader.load( JSON.parse(request5.responseText), addlowerArmRToScene );
-        }
-    }
-    request5.send();
-
-    var request6 = new XMLHttpRequest();
-    request6.open("GET", "models/upperLeg.L.json");
-    request6.onreadystatechange = function () {
-        if (request6.readyState === XMLHttpRequest.DONE) {
-            var loader = new THREE.JSONLoader();
-            loader.load( JSON.parse(request6.responseText), addupperLegLToScene );
-        }
-    }
-    request6.send();
-
-    var request7 = new XMLHttpRequest();
-    request7.open("GET", "models/upperLeg.R.json");
-    request7.onreadystatechange = function () {
-        if (request7.readyState === XMLHttpRequest.DONE) {
-            var loader = new THREE.JSONLoader();
-            loader.load( JSON.parse(request7.responseText), addupperLegRToScene );
-        }
-    }
-    request7.send();
-
-    var request8 = new XMLHttpRequest();
-    request8.open("GET", "models/lowerLeg.L.json");
-    request8.onreadystatechange = function () {
-        if (request8.readyState === XMLHttpRequest.DONE) {
-            var loader = new THREE.JSONLoader();
-            loader.load( JSON.parse(request8.responseText), addlowerLegLToScene );
-        }
-    }
-    request8.send();
-
-    var request9 = new XMLHttpRequest();
-    request9.open("GET", "models/lowerLeg.R.json");
-    request9.onreadystatechange = function () {
-        if (request9.readyState === XMLHttpRequest.DONE) {
-            var loader = new THREE.JSONLoader();
-            loader.load( JSON.parse(request9.responseText), addlowerLegRToScene );
-        }
-    }
-    request9.send();
 }
 
 function onRotateCamera(value) {
@@ -306,13 +194,13 @@ function isAtheleteLoaded(){
 
 function updateMovement(body_part, x, y, z, q1, q2, q3, q4){
 
-    var pos = new THREE.Vector3(x, y, z)
-    var quat = new THREE.Quaternion(q1, q2, q3, q4);
+    //var pos = new THREE.Vector3(x, y, z)
+    //var quat = new THREE.Quaternion(q1, q2, q3, q4);
 
     //console.log("update body part ", body_part);
 
-    athelete[body_part].position.copy(pos);
-    athelete[body_part].quaternion.copy(quat);
+    //athelete[body_part].position.copy(pos);
+    //athelete[body_part].quaternion.copy(quat);
 
     //console.log("updated body part ", body_part);
 }
@@ -332,16 +220,17 @@ function paintGL(canvas) {
     renderer.render( scene, camera );
 }
 
+var step = 4;
 function moveLegs(){
     // Is moving update
     if (currDirectionUp){
-        currAngle += 1;
+        currAngle += step;
         if (currAngle > maxLegAngle){
             currAngle = maxLegAngle;
             currDirectionUp = false;
         }
     }else{
-        currAngle -= 1;
+        currAngle -= step;
         if (currAngle < minLegAngle){
             currAngle = minLegAngle;
             currDirectionUp = true;
@@ -503,111 +392,4 @@ function getBone (name){
     }
     return null;
 }
-
-function moveAthelete(){
-    var _matrix, _matrix2;
-    var pos = new THREE.Vector3(), quat = new THREE.Quaternion();
-
-    for (var i = 0; i < body_part_cnt; i++){
-        _matrix = new THREE.Matrix4();
-
-        if (i === body_parts.upperLegR){
-            _matrix.makeTranslation( 140, 20, 0);
-            _matrix2 = new THREE.Matrix4();
-            _matrix2.makeRotationY(90*ToRad);
-            _matrix.multiply( _matrix2 );
-
-            _matrix2 = new THREE.Matrix4();
-            _matrix2.makeRotationX(-33*ToRad);
-            _matrix.multiply( _matrix2 );
-        }else if(i === body_parts.lowerLegR){
-            _matrix.makeTranslation( 15, 5, 0);
-            _matrix2 = new THREE.Matrix4();
-            _matrix2.makeRotationY(90*ToRad);
-            _matrix.multiply( _matrix2 );
-
-            _matrix2 = new THREE.Matrix4();
-            _matrix2.makeRotationX(30*ToRad);
-            _matrix.multiply( _matrix2 );
-        }else if(i === body_parts.lowerArmR){
-            _matrix.makeTranslation( 15, 5, 0);
-            _matrix2 = new THREE.Matrix4();
-            _matrix2.makeRotationY(90*ToRad);
-            _matrix.multiply( _matrix2 );
-
-            _matrix2 = new THREE.Matrix4();
-            _matrix2.makeRotationX(-180*ToRad);
-            _matrix.multiply( _matrix2 );
-        }else if(i === body_parts.upperArmR){
-            _matrix.makeTranslation( 15, 5, 0);
-            _matrix2 = new THREE.Matrix4();
-            _matrix2.makeRotationY(90*ToRad);
-            _matrix.multiply( _matrix2 );
-
-            _matrix2 = new THREE.Matrix4();
-            _matrix2.makeRotationX(-180*ToRad);
-            _matrix.multiply( _matrix2 );
-        }else{
-            _matrix.makeTranslation( 0, 0, 0);
-            _matrix2 = new THREE.Matrix4();
-            _matrix2.makeRotationY(90*ToRad);
-            _matrix.multiply( _matrix2 );
-
-            _matrix2 = new THREE.Matrix4();
-            _matrix2.makeRotationX(10*ToRad);
-            _matrix.multiply( _matrix2 );
-        }
-
-        pos.setFromMatrixPosition( _matrix );
-        quat.setFromRotationMatrix( _matrix );
-        athelete[i].position.copy(pos);
-        athelete[i].quaternion.copy(quat);
-    }
-}
-
-function addBodyToScene ( geometry, materials ) {
-    athelete[body_parts.body] = new THREE.Mesh( geometry, materials[0] );
-    addMeshToScene ( athelete[body_parts.body] );
-};
-
-function addupperArmLToScene ( geometry, materials ) {
-    athelete[body_parts.upperArmL] = new THREE.Mesh( geometry, materials[0] );
-    addMeshToScene ( athelete[body_parts.upperArmL] );
-};
-
-function addupperArmRToScene ( geometry, materials ) {
-    athelete[body_parts.upperArmR] = new THREE.Mesh( geometry, materials[0] );
-    addMeshToScene ( athelete[body_parts.upperArmR] );
-};
-
-function addlowerArmLToScene ( geometry, materials ) {
-    athelete[body_parts.lowerArmL] = new THREE.Mesh( geometry, materials[0] );
-    addMeshToScene ( athelete[body_parts.lowerArmL] );
-};
-
-function addlowerArmRToScene ( geometry, materials ) {
-    athelete[body_parts.lowerArmR] = new THREE.Mesh( geometry, materials[0] );
-    addMeshToScene ( athelete[body_parts.lowerArmR] );
-};
-
-function addupperLegLToScene ( geometry, materials ) {
-    athelete[body_parts.upperLegL] = new THREE.Mesh( geometry, materials[0] );
-    addMeshToScene ( athelete[body_parts.upperLegL] );
-};
-
-function addupperLegRToScene ( geometry, materials ) {
-    athelete[body_parts.upperLegR] = new THREE.Mesh( geometry, materials[0] );
-    addMeshToScene ( athelete[body_parts.upperLegR] );
-};
-
-function addlowerLegLToScene ( geometry, materials ) {
-    athelete[body_parts.lowerLegL] = new THREE.Mesh( geometry, materials[0] );
-    addMeshToScene ( athelete[body_parts.lowerLegL] );
-};
-
-function addlowerLegRToScene ( geometry, materials ) {
-    athelete[body_parts.lowerLegR] = new THREE.Mesh( geometry, materials[0] );
-    addMeshToScene ( athelete[body_parts.lowerLegR] );
-
-};
 

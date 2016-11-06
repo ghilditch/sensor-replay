@@ -90,8 +90,8 @@ void Workouts::upperArmL(Workout* wo)
 {
     if (wo->Notch().isTracked(BONES::B_LEFT_UPPER_ARM))
     {
-        BonePosition& bp = wo->Notch().getPosition(BONES::B_LEFT_UPPER_ARM);
-        BoneOrientation& bo = wo->Notch().getOrientation(BONES::B_LEFT_UPPER_ARM);
+        BonePosition bp = wo->Notch().getPosition(BONES::B_LEFT_UPPER_ARM);
+        BoneOrientation bo = wo->Notch().getOrientation(BONES::B_LEFT_UPPER_ARM);
         emit moveupperArmL(bp.pos_x(), bp.pos_y(), bp.pos_z(), bo.q1(), bo.q2(), bo.q3(), bo.q4());
     }
 }
@@ -100,8 +100,8 @@ void Workouts::upperArmR(Workout* wo)
 {
     if (wo->Notch().isTracked(BONES::B_RIGHT_UPPER_ARM))
     {
-        BonePosition& bp = wo->Notch().getPosition(B_RIGHT_UPPER_ARM);
-        BoneOrientation& bo = wo->Notch().getOrientation(B_RIGHT_UPPER_ARM);
+        BonePosition bp = wo->Notch().getPosition(B_RIGHT_UPPER_ARM);
+        BoneOrientation bo = wo->Notch().getOrientation(B_RIGHT_UPPER_ARM);
         emit moveupperArmR(bp.pos_x(), bp.pos_y(), bp.pos_z(), bo.q1(), bo.q2(), bo.q3(), bo.q4());
     }
 }
@@ -110,8 +110,8 @@ void Workouts::forearmL(Workout* wo)
 {
     if (wo->Notch().isTracked(BONES::B_LEFT_FOREARM))
     {
-        BonePosition& bp = wo->Notch().getPosition(BONES::B_LEFT_FOREARM);
-        BoneOrientation& bo = wo->Notch().getOrientation(BONES::B_LEFT_FOREARM);
+        BonePosition bp = wo->Notch().getPosition(BONES::B_LEFT_FOREARM);
+        BoneOrientation bo = wo->Notch().getOrientation(BONES::B_LEFT_FOREARM);
         emit moveforearmL(bp.pos_x(), bp.pos_y(), bp.pos_z(), bo.q1(), bo.q2(), bo.q3(), bo.q4());
     }
 }
@@ -120,8 +120,8 @@ void Workouts::forearmR(Workout* wo)
 {
     if (wo->Notch().isTracked(BONES::B_RIGHT_FOREARM))
     {
-        BonePosition& bp = wo->Notch().getPosition(B_RIGHT_FOREARM);
-        BoneOrientation& bo = wo->Notch().getOrientation(B_RIGHT_FOREARM);
+        BonePosition bp = wo->Notch().getPosition(B_RIGHT_FOREARM);
+        BoneOrientation bo = wo->Notch().getOrientation(B_RIGHT_FOREARM);
         emit moveforearmR(bp.pos_x(), bp.pos_y(), bp.pos_z(), bo.q1(), bo.q2(), bo.q3(), bo.q4());
     }
 }
@@ -130,8 +130,8 @@ void Workouts::thighL(Workout* wo)
 {
     if (wo->Notch().isTracked(BONES::B_LEFT_THIGH))
     {
-        BonePosition& bp = wo->Notch().getPosition(BONES::B_LEFT_THIGH);
-        BoneOrientation& bo = wo->Notch().getOrientation(BONES::B_LEFT_THIGH);
+        BonePosition bp = wo->Notch().getPosition(BONES::B_LEFT_THIGH);
+        BoneOrientation bo = wo->Notch().getOrientation(BONES::B_LEFT_THIGH);
         emit movethighL(bp.pos_x(), bp.pos_y(), bp.pos_z(), bo.q1(), bo.q2(), bo.q3(), bo.q4());
     }
 }
@@ -140,8 +140,8 @@ void Workouts::thighR(Workout* wo)
 {
     if (wo->Notch().isTracked(BONES::B_RIGHT_THIGH))
     {
-        BonePosition& bp = wo->Notch().getPosition(BONES::B_RIGHT_THIGH);
-        BoneOrientation& bo = wo->Notch().getOrientation(BONES::B_RIGHT_THIGH);
+        BonePosition bp = wo->Notch().getPosition(BONES::B_RIGHT_THIGH);
+        BoneOrientation bo = wo->Notch().getOrientation(BONES::B_RIGHT_THIGH);
         emit movethighR(bp.pos_x(), bp.pos_y(), bp.pos_z(), bo.q1(), bo.q2(), bo.q3(), bo.q4());
     }
 }
@@ -150,8 +150,8 @@ void Workouts::shinL(Workout* wo)
 {
     if (wo->Notch().isTracked(BONES::B_LEFT_LOWER_LEG))
     {
-        BonePosition& bp = wo->Notch().getPosition(BONES::B_LEFT_LOWER_LEG);
-        BoneOrientation& bo = wo->Notch().getOrientation(BONES::B_LEFT_LOWER_LEG);
+        BonePosition bp = wo->Notch().getPosition(BONES::B_LEFT_LOWER_LEG);
+        BoneOrientation bo = wo->Notch().getOrientation(BONES::B_LEFT_LOWER_LEG);
         emit moveshinL(bp.pos_x(), bp.pos_y(), bp.pos_z(), bo.q1(), bo.q2(), bo.q3(), bo.q4());
     }
 }
@@ -160,8 +160,8 @@ void Workouts::shinR(Workout* wo)
 {
     if (wo->Notch().isTracked(BONES::B_RIGHT_LOWER_LEG))
     {
-        BonePosition& bp = wo->Notch().getPosition(BONES::B_RIGHT_LOWER_LEG);
-        BoneOrientation& bo = wo->Notch().getOrientation(BONES::B_RIGHT_LOWER_LEG);
+        BonePosition bp = wo->Notch().getPosition(BONES::B_RIGHT_LOWER_LEG);
+        BoneOrientation bo = wo->Notch().getOrientation(BONES::B_RIGHT_LOWER_LEG);
         emit moveshinR(bp.pos_x(), bp.pos_y(), bp.pos_z(), bo.q1(), bo.q2(), bo.q3(), bo.q4());
     }
 }
