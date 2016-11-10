@@ -14,7 +14,8 @@ SOURCES += main.cpp \
     boneposition.cpp \
     boneorientation.cpp \
     jointangle.cpp \
-    csvreader.cpp
+    csvreader.cpp \
+    point.cpp
 
 RESOURCES += qml.qrc
 
@@ -42,4 +43,5 @@ HEADERS += \
     boneposition.h \
     boneorientation.h \
     jointangle.h \
-    csvreader.h
+    csvreader.h \
+    point.h

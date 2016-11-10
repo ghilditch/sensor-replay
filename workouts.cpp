@@ -65,23 +65,75 @@ void Workouts::moveNotchSample(int workoutId, const int step)
     wo->Notch().moveIndex(step);
 
     // move everything
-    moveBody(wo);
-    upperArmL(wo);
-    upperArmR(wo);
-    forearmL(wo);
-    forearmR(wo);
-    thighL(wo);
-    thighR(wo);
-    shinL(wo);
-    shinR(wo);
+    moveHipAngle(wo);
+    moveNeckAngle(wo);
+    moveupperArmRAngle(wo);
+    moveupperArmLAngle(wo);
+    moveforearmLAngle(wo);
+    moveforearmRAngle(wo);
+    movethighLAngle(wo);
+    movethighRAngle(wo);
+    moveshinLAngle(wo);
+    moveshinRAngle(wo);
+}
+
+void Workouts::moveHipAngle(Workout* wo)
+{
+    qreal ja = wo->Notch().getAngle(JOINTS::J_HIP);
+    emit moveHipToChestZ(ja);
+}
+
+void Workouts::moveNeckAngle(Workout* wo)
+{
+
+}
+
+void Workouts::moveupperArmRAngle(Workout* wo)
+{
+
+}
+
+void Workouts::moveupperArmLAngle(Workout* wo)
+{
+
+}
+
+void Workouts::moveforearmLAngle(Workout* wo)
+{
+
+}
+
+void Workouts::moveforearmRAngle(Workout* wo)
+{
+
+}
+
+void Workouts::movethighLAngle(Workout* wo)
+{
+
+}
+
+void Workouts::movethighRAngle(Workout* wo)
+{
+
+}
+
+void Workouts::moveshinLAngle(Workout* wo)
+{
+
+}
+
+void Workouts::moveshinRAngle(Workout* wo)
+{
+
 }
 
 void Workouts::moveBody(Workout* wo)
 {
     if (wo->Notch().isTracked(BONES::B_CHEST))
     {
-        BonePosition& bp = wo->Notch().getPosition(BONES::B_CHEST);
-        BoneOrientation& bo = wo->Notch().getOrientation(BONES::B_CHEST);
+        BonePosition bp = wo->Notch().getPosition(BONES::B_CHEST);
+        BoneOrientation bo = wo->Notch().getOrientation(BONES::B_CHEST);
         emit moveBody(bp.pos_x(), bp.pos_y(), bp.pos_z(), bo.q1(), bo.q2(), bo.q3(), bo.q4());
     }
 }

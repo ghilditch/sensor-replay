@@ -30,10 +30,12 @@ enum BONES{
 enum JOINTS {
     J_NECK,
     J_HIP,
+    J_RIGHT_SHOUDER,
     J_RIGHT_ELBOW,
     J_RIGHT_WRIST,
     J_RIGHT_KNEE,
     J_RIGHT_ANKLE,
+    J_LEFT_SHOUDER,
     J_LEFT_ELBOW,
     J_LEFT_WRIST,
     J_LEFT_KNEE,
@@ -66,7 +68,7 @@ public:
     BonePosition getPosition(BONES eBone) const;
     BoneOrientation getOrientation(BONES eBone) const;
     bool isAngleTracked(JOINTS eJoint);
-    JointAngle getAngle(JOINTS eJoint) const;
+    qreal getAngle(JOINTS eJoint) const;
 
 private:
     QDateTime m_startTime;
@@ -101,6 +103,7 @@ private:
     void loadAngleData(const QString &);
     QString boneIndexToName (int index);
     QString jointIndexToName (int index);
+
 };
 
 #endif // NOTCHWORKOUT_H

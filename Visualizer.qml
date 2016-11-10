@@ -78,6 +78,10 @@ Window {
         onMoveshinR: {
             GLCode.updateMovement(GLCode.body_parts.lowerLegR,x, y, z, q1, q2, q3, q4);
         }
+        onMoveHipToChestX: {
+            GLCode.updateBodyPosition(angle);
+
+        }
     }
 
     onCurrentWorkoutChanged: {

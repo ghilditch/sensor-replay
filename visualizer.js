@@ -142,18 +142,16 @@ function addBikerToScene ( geometry, materials ) {
     bone_helper = new THREE.SkeletonHelper(athelete[body_parts.body]);
     scene.add (bone_helper);
 
-    initBikePosition();
-
-    body_part_cnt++;
+        body_part_cnt++;
 
     //onRotateCamera(0);
 };
 
 function initBikePosition(){
-    setUpperBody();
-    setArms();
-    setRLeg(45);
-    setLLeg(95);
+    //setUpperBody();
+    //setArms();
+    //setRLeg(45);
+    //setLLeg(95);
 }
 
 function onRotateCamera(value) {
@@ -205,6 +203,10 @@ function updateMovement(body_part, x, y, z, q1, q2, q3, q4){
     //console.log("updated body part ", body_part);
 }
 
+function updateBodyPosition(angle){
+
+}
+
 function paintGL(canvas) {
 
     //var timer = Date.now() * 0.0005;
@@ -245,7 +247,42 @@ function moveLegs(){
     setLLeg(leftLeg);
 }
 
-function setUpperBody(){
+function setUpperBody(angleInRad){
+    var mtx = new THREE.Matrix4();
+    var mtx2 = new THREE.Matrix4();
+    var pos = new THREE.Vector3();
+    var quat = new THREE.Quaternion();
+
+    mtx.makeTranslation( 1, 1, 1);
+    var angle0 = angleInRad * .1 // 10 percent movement in hips
+    var angle1 = angle - angle0; // the rest in the spine
+
+    mtx2.makeRotationX(angle0);
+    mtx.multiply( mtx2 );
+
+    pos.setFromMatrixPosition( mtx );
+    quat.setFromRotationMatrix( mtx );
+
+    var hips = getBone ('hips');
+    var spine = getBone ('spine');
+    var chest = getBone ('chest');
+
+    if (hips !== null){
+        hips.rotation.setFromRotationMatrix(mtx);
+    }
+
+    mtx2 = new THREE.Matrix4();
+    mtx.makeTranslation( 1, 1, 1);
+    mtx2.makeRotationX(angle1);
+    mtx.multiply( mtx2 );
+
+    if (spine !== null){
+        spine.rotation.setFromRotationMatrix(mtx);
+        //chest.rotation.setFromRotationMatrix(mtx);
+    }
+}
+
+function setHeadPosition(angle){
     var mtx = new THREE.Matrix4();
     var mtx2 = new THREE.Matrix4();
     var pos = new THREE.Vector3();

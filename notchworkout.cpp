@@ -4,7 +4,10 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <qmath.h>
+
 #include "csvreader.h"
+#include "point.h"
 
 NotchWorkout::NotchWorkout() : m_timeOffset(-1), m_currentIndex (-1), m_maxSamples(0)
 {
@@ -75,10 +78,43 @@ bool NotchWorkout::isAngleTracked(JOINTS eJoint)
     return joint->isEnabled();
 }
 
-JointAngle NotchWorkout::getAngle(JOINTS eJoint) const
+qreal NotchWorkout::getAngle(JOINTS eJoint) const
 {
     Joint* joint = m_joints.at(eJoint);
-    return joint->getAngleAt(m_currentIndex);
+    if (joint == NULL)
+        return 0;
+
+    // If the angle is tracked by notch
+    if (joint->isEnabled())
+        return joint->getAngleAt(m_currentIndex).angle();
+    else
+    {
+        // Calculate the angle manually
+        Bone* hipBone = m_bones.at (BONES::B_HIP);
+        if (hipBone == NULL || hipBone->isEnabled())
+            return 0;
+        Bone* chestBone = m_bones.at (BONES::B_CHEST);
+        if (chestBone == NULL || chestBone->isEnabled())
+            return 0;
+
+        // Get the positions
+        const BonePosition& bpHip = hipBone->getPositionAt(m_currentIndex);
+        const BonePosition& bpChest = chestBone->getPositionAt(m_currentIndex);
+
+
+        // create a couple of points
+        Point* a = new Point(bpHip.pos_x(), bpHip.pos_y(), bpHip.pos_z());
+        Point* b = new Point(bpChest.pos_x(), bpChest.pos_y(), bpChest.pos_z());
+
+        // Get the angle
+        double angle = Point::betaAngleZY(*a, *b);
+
+        // cleanup
+        delete a;
+        delete b;
+
+        return angle;
+    }
 }
 
 bool NotchWorkout::loadNotch(const QString &notchDir)
