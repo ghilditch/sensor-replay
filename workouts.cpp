@@ -66,11 +66,6 @@ void Workouts::moveNotchSample(int workoutId, const int step)
 
     // move everything
     moveHipAngle(wo);
-    moveNeckAngle(wo);
-    moveupperArmRAngle(wo);
-    moveupperArmLAngle(wo);
-    moveforearmLAngle(wo);
-    moveforearmRAngle(wo);
     movethighLAngle(wo);
     movethighRAngle(wo);
     moveshinLAngle(wo);
@@ -110,22 +105,26 @@ void Workouts::moveforearmRAngle(Workout* wo)
 
 void Workouts::movethighLAngle(Workout* wo)
 {
-
+    qreal ja = wo->Notch().getAngle(JOINTS::J_LEFT_THIGH);
+    emit moveLeftThighZ(ja);
 }
 
 void Workouts::movethighRAngle(Workout* wo)
 {
-
+    qreal ja = wo->Notch().getAngle(JOINTS::J_RIGHT_THIGH);
+    emit moveRightThighZ(ja);
 }
 
 void Workouts::moveshinLAngle(Workout* wo)
 {
-
+    qreal ja = wo->Notch().getAngle(JOINTS::J_LEFT_KNEE);
+    emit moveLeftShinZ(ja);
 }
 
 void Workouts::moveshinRAngle(Workout* wo)
 {
-
+    qreal ja = wo->Notch().getAngle(JOINTS::J_RIGHT_KNEE);
+    emit moveRightShinZ(ja);
 }
 
 void Workouts::moveBody(Workout* wo)
@@ -234,6 +233,8 @@ void Workouts::loadWorkouts()
     QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
 
     loadJson(loadDoc.object());
+
+    saveWorkouts();
 
     emit workoutsChanged();
 }

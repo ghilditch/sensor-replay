@@ -89,33 +89,114 @@ qreal NotchWorkout::getAngle(JOINTS eJoint) const
         return joint->getAngleAt(m_currentIndex).angle();
     else
     {
-        // Calculate the angle manually
-        Bone* hipBone = m_bones.at (BONES::B_HIP);
-        if (hipBone == NULL || hipBone->isEnabled())
+        switch (eJoint)
+        {
+        case JOINTS::J_HIP:
+        {
+            return hipAngle();
+        }
+        case JOINTS::J_RIGHT_THIGH:
+        {
+            return rThighAngle();
+        }
+        case JOINTS::J_LEFT_THIGH:
+        {
+            return lThighAngle();
+        }
+        default:
             return 0;
-        Bone* chestBone = m_bones.at (BONES::B_CHEST);
-        if (chestBone == NULL || chestBone->isEnabled())
-            return 0;
+        }
 
-        // Get the positions
-        const BonePosition& bpHip = hipBone->getPositionAt(m_currentIndex);
-        const BonePosition& bpChest = chestBone->getPositionAt(m_currentIndex);
-
-
-        // create a couple of points
-        Point* a = new Point(bpHip.pos_x(), bpHip.pos_y(), bpHip.pos_z());
-        Point* b = new Point(bpChest.pos_x(), bpChest.pos_y(), bpChest.pos_z());
-
-        // Get the angle
-        double angle = Point::betaAngleZY(*a, *b);
-
-        // cleanup
-        delete a;
-        delete b;
-
-        return angle;
     }
 }
+
+double NotchWorkout::hipAngle() const
+{
+    // Calculate the angle manually
+    Bone* hipBone = m_bones.at (BONES::B_HIP);
+    if (hipBone == NULL || !hipBone->isEnabled())
+        return 0;
+    Bone* chestBone = m_bones.at (BONES::B_CHEST);
+    if (chestBone == NULL || !chestBone->isEnabled())
+        return 0;
+
+    // Get the positions
+    const BonePosition& bpHip = hipBone->getPositionAt(m_currentIndex);
+    const BonePosition& bpChest = chestBone->getPositionAt(m_currentIndex);
+
+
+    // create a couple of points
+    Point* a = new Point(bpHip.pos_x(), bpHip.pos_y(), bpHip.pos_z());
+    Point* b = new Point(bpChest.pos_x(), bpChest.pos_y(), bpChest.pos_z());
+
+    // Get the angle
+    double angle = Point::betaAngleZY(*a, *b);
+
+    // cleanup
+    delete a;
+    delete b;
+
+    return angle;
+}
+
+double NotchWorkout::rThighAngle()const
+{
+    // Calculate the angle manually
+    Bone* hipBone = m_bones.at (BONES::B_HIP);
+    if (hipBone == NULL || !hipBone->isEnabled())
+        return 0;
+    Bone* thighBone = m_bones.at (BONES::B_RIGHT_THIGH);
+    if (thighBone == NULL || !thighBone->isEnabled())
+        return 0;
+
+    // Get the positions
+    const BonePosition& bpHip = hipBone->getPositionAt(m_currentIndex);
+    const BonePosition& bpThigh = thighBone->getPositionAt(m_currentIndex);
+
+
+    // create a couple of points
+    Point* a = new Point(bpHip.pos_x(), bpHip.pos_y(), bpHip.pos_z());
+    Point* b = new Point(bpThigh.pos_x(), bpThigh.pos_y(), bpThigh.pos_z());
+
+    // Get the angle
+    double angle = Point::betaAngleZY(*a, *b);
+
+    // cleanup
+    delete a;
+    delete b;
+
+    return angle;
+}
+
+double NotchWorkout::lThighAngle() const
+{
+    // Calculate the angle manually
+    Bone* hipBone = m_bones.at (BONES::B_HIP);
+    if (hipBone == NULL || !hipBone->isEnabled())
+        return 0;
+    Bone* thighBone = m_bones.at (BONES::B_LEFT_THIGH);
+    if (thighBone == NULL || !thighBone->isEnabled())
+        return 0;
+
+    // Get the positions
+    const BonePosition& bpHip = hipBone->getPositionAt(m_currentIndex);
+    const BonePosition& bpThigh = thighBone->getPositionAt(m_currentIndex);
+
+
+    // create a couple of points
+    Point* a = new Point(bpHip.pos_x(), bpHip.pos_y(), bpHip.pos_z());
+    Point* b = new Point(bpThigh.pos_x(), bpThigh.pos_y(), bpThigh.pos_z());
+
+    // Get the angle
+    double angle = Point::betaAngleZY(*a, *b);
+
+    // cleanup
+    delete a;
+    delete b;
+
+    return angle;
+}
+
 
 bool NotchWorkout::loadNotch(const QString &notchDir)
 {

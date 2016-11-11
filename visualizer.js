@@ -23,12 +23,6 @@ var bone_helper;
 var ToRad = Math.PI / 180;
 var qmlView;
 
-// Simulate movement of the legs
-var maxLegAngle = 95;
-var minLegAngle = 45;
-var currAngle = minLegAngle;
-var currDirectionUp = true;
-
 function initializeGL(canvas, eventSource, mainView) {
 
     qmlView = mainView;
@@ -141,25 +135,11 @@ function addBikerToScene ( geometry, materials ) {
 
     bone_helper = new THREE.SkeletonHelper(athelete[body_parts.body]);
     scene.add (bone_helper);
-
-        body_part_cnt++;
-
-    //onRotateCamera(0);
+    body_part_cnt++;
 };
-
-function initBikePosition(){
-    //setUpperBody();
-    //setArms();
-    //setRLeg(45);
-    //setLLeg(95);
-}
 
 function onRotateCamera(value) {
     moveCamera (value, 110 , -5)
-    //var rad = ToRad * value ;
-    //camera.position.x = Math.cos(rad) * 10;
-    //camera.position.z = Math.sin (rad) * 10;
-    //camera.lookAt ( scene.position );
 }
 
 function onSpeedChanged(value) {
@@ -182,6 +162,20 @@ function onResizeGL(canvas) {
     renderer.setSize(canvas.width, canvas.height);
 }
 
+function paintGL(canvas) {
+
+    //var timer = Date.now() * 0.0005;
+    //camera.position.x = Math.cos(timer) * 10;
+    //camera.position.z = Math.sin (timer) * 10;
+    //camera.lookAt ( scene.position );
+
+   if( isAtheleteLoaded){
+       bone_helper.update ();
+    }
+
+    renderer.render( scene, camera );
+}
+
 function isAtheleteLoaded(){
     if( body_part_cnt === total_body_parts ){
         return true;
@@ -200,54 +194,12 @@ function updateMovement(body_part, x, y, z, q1, q2, q3, q4){
     //athelete[body_part].position.copy(pos);
     //athelete[body_part].quaternion.copy(quat);
 
-    //console.log("updated body part ", body_part);
+    console.log("updated body part ", body_part);
 }
 
-function updateBodyPosition(angle){
+function setBodyPosition(angleInRad){
+    console.log("updated body angle ", angleInRad);
 
-}
-
-function paintGL(canvas) {
-
-    //var timer = Date.now() * 0.0005;
-    //camera.position.x = Math.cos(timer) * 10;
-    //camera.position.z = Math.sin (timer) * 10;
-    //camera.lookAt ( scene.position );
-
-    if( isAtheleteLoaded){
-        moveLegs();
-        bone_helper.update ();
-    }
-
-    renderer.render( scene, camera );
-}
-
-var step = 4;
-function moveLegs(){
-    // Is moving update
-    if (currDirectionUp){
-        currAngle += step;
-        if (currAngle > maxLegAngle){
-            currAngle = maxLegAngle;
-            currDirectionUp = false;
-        }
-    }else{
-        currAngle -= step;
-        if (currAngle < minLegAngle){
-            currAngle = minLegAngle;
-            currDirectionUp = true;
-        }
-    }
-
-    var rightLeg = currAngle;
-    // Opposite
-    var leftLeg = (maxLegAngle - currAngle) +  minLegAngle;
-
-    setRLeg(rightLeg);
-    setLLeg(leftLeg);
-}
-
-function setUpperBody(angleInRad){
     var mtx = new THREE.Matrix4();
     var mtx2 = new THREE.Matrix4();
     var pos = new THREE.Vector3();
@@ -255,7 +207,7 @@ function setUpperBody(angleInRad){
 
     mtx.makeTranslation( 1, 1, 1);
     var angle0 = angleInRad * .1 // 10 percent movement in hips
-    var angle1 = angle - angle0; // the rest in the spine
+    var angle1 = angleInRad - angle0; // the rest in the spine
 
     mtx2.makeRotationX(angle0);
     mtx.multiply( mtx2 );
@@ -282,143 +234,63 @@ function setUpperBody(angleInRad){
     }
 }
 
-function setHeadPosition(angle){
+function setBoneAngle(bone, angleInRad){
     var mtx = new THREE.Matrix4();
     var mtx2 = new THREE.Matrix4();
     var pos = new THREE.Vector3();
     var quat = new THREE.Quaternion();
 
     mtx.makeTranslation( 1, 1, 1);
-    var angle0 = 25 * ToRad;//Math.sin (20 * ToRad);// * ToRad;
-    var angle1 = -35 * ToRad;// Math.sin (-45 * ToRad);// * ToRad;
 
-    mtx2.makeRotationX(angle0);
+    mtx2.makeRotationX(angleInRad);
     mtx.multiply( mtx2 );
 
     pos.setFromMatrixPosition( mtx );
     quat.setFromRotationMatrix( mtx );
 
-    var hips = getBone ('hips');
-    var spine = getBone ('spine');
-    var chest = getBone ('chest');
-
-    if (hips !== null){
-        hips.rotation.setFromRotationMatrix(mtx);
-    }
-
-    angle0 = 30 * ToRad;
-    mtx2 = new THREE.Matrix4();
-    mtx.makeTranslation( 1, 1, 1);
-    mtx2.makeRotationX(angle0);
-    mtx.multiply( mtx2 );
-
-    if (spine !== null){
-        spine.rotation.setFromRotationMatrix(mtx);
-        //chest.rotation.setFromRotationMatrix(mtx);
-    }
-
-    mtx2 = new THREE.Matrix4();
-    mtx.makeTranslation( 1, 1, 1);
-    mtx2.makeRotationX(angle1);
-    mtx.multiply( mtx2 );
-    var neck = getBone ('neck');
-    var head = getBone ('head');
-    if (head !== null){
-        head.rotation.setFromRotationMatrix(mtx);
+    if (bone !== null){
+        bone.rotation.setFromRotationMatrix(mtx);
     }
 }
 
-function setArms(){
-    var mtx = new THREE.Matrix4();
-    var mtx2 = new THREE.Matrix4();
-    var pos = new THREE.Vector3();
-    var quat = new THREE.Quaternion();
-
-    var armR = getBone ('upper_arm.R');
-    var armL = getBone ('upper_arm.L');
-
-    mtx.makeTranslation( 1, 1, 1);
-    var angle0 = -90 * ToRad;// Math.cos (180 * ToRad);// * ToRad;
-
-    mtx2.makeRotationX(angle0);
-    mtx.multiply( mtx2 );
-
-    pos.setFromMatrixPosition( mtx );
-    quat.setFromRotationMatrix( mtx );
-
-    if (armR !== null){
-        armR.rotation.setFromRotationMatrix(mtx);
-        armL.rotation.setFromRotationMatrix(mtx);
-    }
+function setLeftUpperArm(angleInRad){
+    var b = getBone ('upper_arm.L');
+    setBoneAngle(b, angleInRad)
 }
 
-function setRLeg(angle){
-    var mtx = new THREE.Matrix4();
-    var mtx2 = new THREE.Matrix4();
-    var pos = new THREE.Vector3();
-    var quat = new THREE.Quaternion();
-
-    var thighR = getBone ('thigh.R');
-    var shinR = getBone ('shin.R');
-
-    mtx.makeTranslation( 1, 4, 10);
-    var angle0 = -angle * ToRad;
-    var angle1 = angle * ToRad;
-
-    mtx2.makeRotationX(angle0);
-    mtx.multiply( mtx2 );
-
-    pos.setFromMatrixPosition( mtx );
-    quat.setFromRotationMatrix( mtx );
-
-
-    if (thighR !== null){
-        thighR.rotation.setFromRotationMatrix(mtx);
-    }
-
-    mtx2 = new THREE.Matrix4();
-    mtx.makeTranslation( 1, 1, 1);
-    mtx2.makeRotationX(angle1);
-    mtx.multiply( mtx2 );
-
-    if (shinR !== null){
-        shinR.rotation.setFromRotationMatrix(mtx);
-    }
+function setRightUpperArm(angleInRad){
+    var b = getBone ('upper_arm.R');
+    setBoneAngle(b, angleInRad)
 }
 
-function setLLeg(angle){
-    var mtx = new THREE.Matrix4();
-    var mtx2 = new THREE.Matrix4();
-    var pos = new THREE.Vector3();
-    var quat = new THREE.Quaternion();
+function setLeftForearm(angleInRad){
+    var b = getBone ('forearm.L');
+    setBoneAngle(b, angleInRad)
+}
 
-    var thighL = getBone ('thigh.L');
-    var shinL = getBone ('shin.L');
+function setRightForearm(angleInRad){
+    var b = getBone ('forearm.R');
+    setBoneAngle(b, angleInRad)
+}
 
+function setRightThigh(angleInRad){
+    var b = getBone ('thigh.R');
+    setBoneAngle(b, angleInRad)
+}
 
-    mtx.makeTranslation( 1, 4, 10);
-    var angle0 = -angle * ToRad;
-    var angle1 = angle * ToRad;
+function setLeftThigh(angleInRad){
+    var b = getBone ('thigh.L');
+    setBoneAngle(b, angleInRad)
+}
 
-    mtx2.makeRotationX(angle0);
-    mtx.multiply( mtx2 );
+function setRightShin(angleInRad){
+    var b = getBone ('shin.R');
+    setBoneAngle(b, angleInRad)
+}
 
-    pos.setFromMatrixPosition( mtx );
-    quat.setFromRotationMatrix( mtx );
-
-
-    if (thighL !== null){
-        thighL.rotation.setFromRotationMatrix(mtx);
-    }
-
-    mtx2 = new THREE.Matrix4();
-    mtx.makeTranslation( 1, 1, 1);
-    mtx2.makeRotationX(angle1);
-    mtx.multiply( mtx2 );
-    if (shinL !== null){
-        shinL.rotation.setFromRotationMatrix(mtx);
-    }
-
+function setLeftShin(angleInRad){
+    var b = getBone ('shin.L');
+    setBoneAngle(b, angleInRad)
 }
 
 function getBone (name){

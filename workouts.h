@@ -77,9 +77,11 @@ signals:
     void moveshinR(qreal x, qreal y, qreal z, qreal q1, qreal q2, qreal q3, qreal q4);
 
     // Body angles
-    void moveHipToChestX(qreal angle);
-    void moveHipToChestY(qreal angle);
     void moveHipToChestZ(qreal angle);
+    void moveRightThighZ(qreal angle);
+    void moveLeftThighZ(qreal angle);
+    void moveRightShinZ(qreal angle);
+    void moveLeftShinZ(qreal angle);
 
 
 public slots:

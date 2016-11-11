@@ -33,17 +33,19 @@ enum JOINTS {
     J_RIGHT_SHOUDER,
     J_RIGHT_ELBOW,
     J_RIGHT_WRIST,
+    J_RIGHT_THIGH,
     J_RIGHT_KNEE,
     J_RIGHT_ANKLE,
     J_LEFT_SHOUDER,
     J_LEFT_ELBOW,
     J_LEFT_WRIST,
+    J_LEFT_THIGH,
     J_LEFT_KNEE,
     J_LEFT_ANKLE
 };
 
 #define TOTAL_BONES 17
-#define TOTAL_JOINTS 10
+#define TOTAL_JOINTS 14
 
 class NotchWorkout
 {
@@ -103,6 +105,11 @@ private:
     void loadAngleData(const QString &);
     QString boneIndexToName (int index);
     QString jointIndexToName (int index);
+
+    // Calculate the angles based on the position
+    double hipAngle() const;
+    double rThighAngle()const;
+    double lThighAngle() const;
 
 };
 
