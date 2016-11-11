@@ -1,7 +1,7 @@
 #include <QDebug>
 #include "bone.h"
 
-Bone::Bone()
+Bone::Bone(const QString &name): m_name(name)
 {
     m_offset = -1;
 }
@@ -14,6 +14,11 @@ bool Bone::isEnabled() const
 void Bone::setOffset(int offset)
 {
     m_offset = offset;
+}
+
+QString Bone::name() const
+{
+    return m_name;
 }
 
 void Bone::addPosition(double ts, QStringList values)

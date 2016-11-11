@@ -12,50 +12,28 @@ CsvReader::CsvReader()
 
 }
 
-QList<QStringList> CsvReader::readToList(const QString& filePath,
-                                      const QString& separator,
-                                      const QString& textDelimeter,
-                                      QTextCodec* codec)
+QList<QStringList> CsvReader::readToList(const QString& filePath)
 {
-    QList<QStringList> data;
-    CsvReader::read(filePath, data, separator, textDelimeter, codec);
+    QList<QStringList> list;
+    QString separator = QString(",");
+    QString textDelimeter = QString("\"");
 
-    return data;
-}
-
-// Function that really reads csv-file and save it's data as strings to
-// QList<QStringList>
-// @input:
-// - filePath - string with absolute path to csv-file
-// - list - refernce to list container where read data will be saved
-// - separator - string or character that separate values in a row
-// - textDelimeter - string or character that enclose each element in a row
-// - codec - pointer to codec object that would be used for file reading
-// @output:
-// - QList<QStringList> - list of values (as strings) from csv-file. If case of
-// error will return empty QList<QStringList>.
-bool CsvReader::read(const QString& filePath,
-                            QList<QStringList>& list,
-                            const QString& separator,
-                            const QString& textDelimeter,
-                            QTextCodec* codec)
-{
     QFile csvFile(filePath);
     if ( false == csvFile.open(QIODevice::ReadOnly | QIODevice::Text) )
     {
         qDebug() << __FUNCTION__  << "Error - can't open file:" << filePath;
-        return false;
+        return list;
     }
 
     QTextStream stream(&csvFile);
-    stream.setCodec(codec);
+    stream.setCodec(QTextCodec::codecForName("UTF-8"));
 
     // This list will contain elements of the row if elements of this row
     // are located on several lines
     QStringList row;
 
     ElementInfo elemInfo;
-    while ( false == stream.atEnd() )
+    while ( !stream.atEnd() )
     {
         QString line = stream.readLine();
         QStringList elements = CsvReader::splitElements(
@@ -72,7 +50,7 @@ bool CsvReader::read(const QString& filePath,
             else
             {
                 // Yes, this elements should be added to the row
-                if (false == elements.isEmpty())
+                if (!elements.isEmpty())
                 {
                     row.last().append(elements.takeFirst());
                     row << elements;
@@ -85,9 +63,9 @@ bool CsvReader::read(const QString& filePath,
         else
         {
             // This elements constitute long row that on several lines
-            if (false == elements.isEmpty())
+            if (!elements.isEmpty())
             {
-                if (false == row.isEmpty())
+                if (!row.isEmpty())
                 {
                     row.last().append(elements.takeFirst());
                 }
@@ -99,12 +77,13 @@ bool CsvReader::read(const QString& filePath,
 
     csvFile.close();
 
-    if (false == elemInfo.isEnded && false == row.isEmpty())
+    if (!elemInfo.isEnded && !row.isEmpty())
     {
         list << row;
     }
 
-    return true;
+
+    return list;
 }
 
 // Split string line to elements by separators

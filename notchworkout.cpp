@@ -14,7 +14,7 @@ NotchWorkout::NotchWorkout() : m_timeOffset(-1), m_currentIndex (-1), m_maxSampl
     // Allocate the bones
     for (int i =0; i < TOTAL_BONES; i++)
     {
-        Bone* bone = new Bone();
+        Bone* bone = new Bone(boneIndexToName(i));
         m_bones.append(bone);
     }
 
@@ -373,39 +373,39 @@ QString NotchWorkout::boneIndexToName (int index)
     switch (index)
     {
     case B_HEAD:
-        return "Head";
+        return "head";
     case B_NECK:
-        return "Neck";
+        return "neck";
     case B_CHEST:
-        return "Chest";
+        return "chest";
     case B_TUMMY:
-        return "Tummy";
+        return "tummy";
     case B_HIP:
-        return "Hip";
+        return "hip";
     case B_RIGHT_UPPER_ARM:
-        return "Right Upper Arm";
+        return "upper_arm.R";
     case B_RIGHT_FOREARM:
-        return "Right Forearm";
+        return "forearm.R";
     case B_RIGHT_HAND:
-        return "Hand";
+        return "hand.R";
     case B_RIGHT_THIGH:
-        return "Right Thigh";
+        return "thigh.R";
     case B_RIGHT_LOWER_LEG:
-        return "Right Lower Leg";
+        return "shin.R";
     case B_RIGHT_FOOT:
-        return "Right Foot";
+        return "foot.R";
     case B_LEFT_UPPER_ARM:
-        return "Left Upper Arm";
+        return "upper_arm.L";
     case B_LEFT_FOREARM:
-        return "Left Forearm";
+        return "forearm.L";
     case B_LEFT_HAND:
-        return "Left Hand";
+        return "hand.L";
     case B_LEFT_THIGH:
-        return "Left Thigh";
+        return "thigh.L";
     case B_LEFT_LOWER_LEG:
-        return "Left Lower Leg";
+        return "shin.L";
     case B_LEFT_FOOT:
-        return "Left Foot";
+        return "foot.L";
     default:
         return "Unknown??";
     }
