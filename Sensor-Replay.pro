@@ -15,7 +15,8 @@ SOURCES += main.cpp \
     boneorientation.cpp \
     jointangle.cpp \
     csvreader.cpp \
-    point.cpp
+    point.cpp \
+    notchsensorsample.cpp
 
 RESOURCES += qml.qrc
 
@@ -44,4 +45,5 @@ HEADERS += \
     boneorientation.h \
     jointangle.h \
     csvreader.h \
-    point.h
+    point.h \
+    notchsensorsample.h

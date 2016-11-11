@@ -8,7 +8,7 @@
 class Bone
 {
 public:
-    Bone();
+    Bone(const QString &);
 
     bool isEnabled() const;
     void setOffset(int offset);
@@ -17,11 +17,13 @@ public:
     void addOrientation(double ts, QStringList values);
     BonePosition getPositionAt(int index) const;
     BoneOrientation getOrientationAt(int index) const;
+    QString name() const;
 
 private:
     int m_offset;
     QList<BonePosition*> m_bonePositions;
     QList<BoneOrientation*> m_boneOrientations;
+    QString m_name;
 
 };
 
