@@ -2,6 +2,7 @@
 #define NOTCHSENSORSAMPLE_H
 
 #include <QObject>
+#include <QDateTime>
 #include "boneposition.h"
 #include "boneorientation.h"
 #include "jointangle.h"
@@ -32,6 +33,13 @@ public:
 
     qreal angle() const;
     void setAngle(const qreal);
+
+signals:
+    void sensorNameChanged();
+    void timestampChanged();
+    void positionChanged();
+    void orientationChanged();
+    void angleChanged();
 
 private:
     QString m_sensorName;

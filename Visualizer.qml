@@ -12,7 +12,7 @@ Window {
     visible: true
 
     // button state
-    property bool isHoverEnabled: false
+    property bool isHoverEnabled: true
 
     // slider controls
     property real xLookAtOffset: 0
@@ -29,10 +29,60 @@ Window {
     property real controlButtonSize: (height < 768) ? (height / 11) : 70
 
     // Current workout
-    property var currentWorkout: null
     property int currentWorkoutId: -1
     property bool loading: false
     property bool workoutReady: false
+
+    Item{
+        id: stateMachine
+        state: "stopped"
+        states: [
+            State {
+                name: "playing"
+                PropertyChanges {
+                    target: playButtonImage
+                    source: {
+                        if (playButtonMouseArea.containsMouse)
+                            "qrc:/images/pausehoverpressed.png"
+                        else
+                            "qrc:/images/pausenormal.png"
+                    }
+                }
+                PropertyChanges {
+                    target: stopButtonImage
+                    source: "qrc:/images/stopnormal.png"
+                }
+            },
+            State {
+                name: "paused"
+                PropertyChanges {
+                    target: playButtonImage
+                    source: {
+                        if (playButtonMouseArea.containsMouse)
+                            "qrc:/images/playhoverpressed.png"
+                        else
+                            "qrc:/images/playnormal.png"
+                    }
+                }
+                PropertyChanges {
+                    target: stopButtonImage
+                    source: "qrc:/images/stopnormal.png"
+                }
+            },
+            State {
+                name: "stopped"
+                PropertyChanges {
+                    target: playButtonImage
+                    source: "qrc:/images/playnormal.png"
+                }
+                PropertyChanges {
+                    target: stopButtonImage
+                    source: "qrc:/images/stopdisabled.png"
+                }
+            }
+        ]
+    }
+
 
     // Orientation
     property bool isPortrait: Screen.primaryOrientation === Qt.PortraitOrientation
@@ -41,6 +91,7 @@ Window {
         id: workouts
         onWorkoutLoaded :
         {
+            updateWorkoutInfo(wo.name, wo.date, wo.type)
             loading = false;
             workoutReady = true;
         }
@@ -95,11 +146,7 @@ Window {
         }
     }
 
-    onCurrentWorkoutChanged: {
-        updateWorkoutInfo();
-    }
-
-    onCurrentWorkoutIdChanged: {
+   onCurrentWorkoutIdChanged: {
         if (currentWorkoutId !== -1)
         {
             loading = true;
@@ -107,36 +154,9 @@ Window {
         }
     }
 
-    ListView {
-        id: categories
-        property int itemWidth: 210
-
-        width: isPortrait ? parent.width : itemWidth
-        height: isPortrait ? itemWidth : parent.height
-        orientation: isPortrait ? ListView.Horizontal : ListView.Vertical
-        anchors.top: parent.top
-        model: workouts.workouts
-        delegate: WorkoutDelegate { itemSize: categories.itemWidth }
-        spacing: 3
-    }
-
-    ScrollBar {
-        id: listScrollBar
-
-        orientation: isPortrait ? Qt.Horizontal : Qt.Vertical
-        height: isPortrait ? 8 : categories.height;
-        width: isPortrait ? categories.width : 8
-        scrollArea: categories;
-        anchors.right: categories.right
-    }
-
     Canvas3D {
         id: canvas3d
-        //anchors.fill: parent
-        anchors.bottom: parent.bottom
-        anchors.top: parent.top
-        anchors.right: parent.right
-        anchors.left: listScrollBar.right
+        anchors.fill: parent
 
         onInitializeGL: {
             GLCode.initializeGL(canvas3d, eventSource, mainview);
@@ -145,7 +165,10 @@ Window {
         onPaintGL: {
             // Update the skeleton
             if (workoutReady)
-                updateSensorInfo();
+            {
+                // ToDo, update next frame
+                //updateSensorInfo();
+            }
             GLCode.paintGL(canvas3d);
             fpsDisplay.fps = canvas3d.fps;
         }
@@ -166,8 +189,8 @@ Window {
         id: playButton
         height: 54
         width: 54
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: width
+        anchors.bottom: scaleSlider.top
+        //anchors.bottomMargin: width
         x: parent.width / 2 - width - buttonHorizontalMargin
         color: "transparent"
 
@@ -181,19 +204,19 @@ Window {
             anchors.fill: parent
             hoverEnabled: isHoverEnabled
             onClicked: {
-                if (mainview.state === 'paused' || mainview.state == 'stopped')
-                    mainview.state = 'playing'
+                if (stateMachine.state === 'paused' || stateMachine.state === 'stopped')
+                    stateMachine.state = 'playing'
                 else
-                    mainview.state = 'paused'
+                    stateMachine.state = 'paused'
             }
             onEntered: {
-                if (mainview.state === 'playing')
+                if (stateMachine.state === 'playing')
                     playButtonImage.source = "qrc:/images/pausehoverpressed.png"
                 else
                     playButtonImage.source = "qrc:/images/playhoverpressed.png"
             }
             onExited: {
-                if (mainview.state === 'playing')
+                if (stateMachine.state === 'playing')
                     playButtonImage.source = "qrc:/images/pausenormal.png"
                 else
                     playButtonImage.source = "qrc:/images/playnormal.png"
@@ -205,8 +228,8 @@ Window {
         id: stopButton
         height: 54
         width: 54
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: width
+        anchors.bottom: scaleSlider.top
+        //anchors.bottomMargin: width
         x: parent.width / 2 + buttonHorizontalMargin
         color: "transparent"
 
@@ -218,13 +241,13 @@ Window {
         MouseArea {
             anchors.fill: parent
             hoverEnabled: isHoverEnabled
-            onClicked: mainview.state = 'stopped'
+            onClicked: stateMachine.state = 'stopped'
             onEntered: {
-                if (mainview.state !== 'stopped')
+                if (stateMachine.state !== 'stopped')
                     stopButtonImage.source = "qrc:/images/stophoverpressed.png"
             }
             onExited: {
-                if (mainview.state !== 'stopped')
+                if (stateMachine.state !== 'stopped')
                     stopButtonImage.source = "qrc:/images/stopnormal.png"
             }
         }
@@ -233,19 +256,17 @@ Window {
     InfoSheet {
         id: info
         width: 400
-        anchors.right: parent.right
-        anchors.rightMargin: 10
+        anchors.left: parent.left
+        anchors.leftMargin: 10
         opacity: 0.5
 
-        workout: "No Workout Selected"
+        workout: "Workout not opened"
     }
 
-    function updateWorkoutInfo(){
+    function updateWorkoutInfo(name, date, type){
         info.width = 400;
-        if (currentWorkout !== null)
-        {
-            info.workout = currentWorkout;
-        }
+        info.time = date
+        info.workout = name;
     }
 
      function updateSensorInfo() {
@@ -260,6 +281,7 @@ Window {
         anchors.horizontalCenter: parent.horizontalCenter
         width: sliderLength
         value: 0
+        stepSize: 1
         minimumValue: -180
         maximumValue: 180
         onValueChanged: GLCode.onRotateCamera(value);
@@ -272,7 +294,10 @@ Window {
         font.pixelSize: textSize
         font.weight: Font.Light
         color: "black"
-        text: "Rotate"
+        text: {
+
+            return "Rotation =" + rotateSlider.value + " degrees";
+        }
     }
 
     StyledSlider {
@@ -281,9 +306,10 @@ Window {
         anchors.bottomMargin: 10
         anchors.horizontalCenter: parent.horizontalCenter
         width: sliderLength
-        value: 1200
-        minimumValue: 1
-        maximumValue: 2000
+        value: 1
+        stepSize: 0.5
+        minimumValue: 0.5
+        maximumValue: 2
         onValueChanged: GLCode.setScale(value);
     }
     Text {
@@ -294,7 +320,10 @@ Window {
         font.pixelSize: textSize
         font.weight: Font.Light
         color: "black"
-        text: "Playback Speed"
+        text: {
+
+            return "Playback Speed =" + scaleSlider.value;
+        }
     }
 
     // FPS display, initially hidden, clicking will show it

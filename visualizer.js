@@ -74,7 +74,7 @@ function initializeGL(canvas, eventSource, mainView) {
 
     createGrid();
 
-    loadBikerMesh();
+    //loadBikerMesh();
 }
 
 var moveCamera = function (h,v,d) {
@@ -169,9 +169,9 @@ function paintGL(canvas) {
     //camera.position.z = Math.sin (timer) * 10;
     //camera.lookAt ( scene.position );
 
-   if( isAtheleteLoaded){
-       bone_helper.update ();
-    }
+   //if( isAtheleteLoaded){
+   //    bone_helper.update ();
+   // }
 
     renderer.render( scene, camera );
 }

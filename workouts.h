@@ -62,7 +62,7 @@ private:
 
 signals:
     void workoutsChanged();
-    void workoutLoaded();
+    void workoutLoaded(Workout* wo);
     void workoutLoadError();
 
     // Body movements

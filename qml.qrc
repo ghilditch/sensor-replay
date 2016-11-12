@@ -36,5 +36,6 @@
         <file>images/busy.png</file>
         <file>images/scrollbar.png</file>
         <file>models/biker.json</file>
+        <file>images/fileopen.png</file>
     </qresource>
 </RCC>

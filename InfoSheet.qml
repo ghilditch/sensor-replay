@@ -42,7 +42,7 @@ Rectangle {
     Text {
         id: infoText
         anchors.top: workoutText.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
+        //anchors.horizontalCenter: parent.horizontalCenter
 
         property string time: ""
         property string heartrate: ""
@@ -71,6 +71,32 @@ Rectangle {
                 + "<p>Right Leg Angle:" + leg_angle_r + "</p></br>"
                 + "<p>Left Leg Angle:" + leg_angle_l + "</p></br>"
         }
+    }
+
+    Rectangle {
+        id: openButton
+        height: 54
+        width: 54
+        anchors.bottom: parent.bottom
+        //anchors.bottomMargin: width
+        x: parent.width / 2 + buttonHorizontalMargin
+        color: "transparent"
+
+        Image {
+            id: openButtonImage
+            source: "qrc:/images/fileopen.png"
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: mainview.currentWorkoutId = 0
+        }
+    }
+
+    BusyIndicator {
+        scale: 0.8
+        visible: mainview.loading
+        anchors.centerIn: parent
     }
 
 }

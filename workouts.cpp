@@ -34,7 +34,7 @@ void Workouts::loadWorkout(const int workoutId)
         // load the workout
         if (wo->loadSamples())
         {
-            emit workoutLoaded();
+            emit workoutLoaded(wo);
         }
         else
         {
@@ -233,8 +233,6 @@ void Workouts::loadWorkouts()
     QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
 
     loadJson(loadDoc.object());
-
-    saveWorkouts();
 
     emit workoutsChanged();
 }
