@@ -132,7 +132,7 @@ function addBikerToScene ( geometry, materials ) {
 
     // Add the bone helper
     bone_helper = new THREE.SkeletonHelper(athelete);
-    scene.add (bone_helper);
+    //scene.add (bone_helper);
 };
 
 function onRotateCamera(value) {
@@ -155,7 +155,7 @@ function paintGL(canvas) {
 
     if(isAtheleteLoaded()){
         // Update the helper
-        bone_helper.update ();
+        //bone_helper.update ();
     }
 
     // Render the scene
@@ -232,7 +232,8 @@ function setBodyPosition(angleInRad){
     }
 }
 
-function setBoneAngle(bone, angleInRad){
+function setBoneAngle(bone, angle){
+    var angleInRad = angle / 180 * Math.PI;
     var mtx = new THREE.Matrix4();
     var mtx2 = new THREE.Matrix4();
     var pos = new THREE.Vector3();

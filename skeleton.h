@@ -29,7 +29,7 @@
 #define RIGHT_TOP_FOOT "RightTopFoot"
 #define RIGHT_FRONT_FOOT "RightFrontFoot"
 #define RIGHT_HEEL "RightHeel"
-
+#define ANGLE_SMOOTHING 0
 
 #include <QList>
 #include <QJsonObject>

@@ -32,7 +32,7 @@ public:
     void setParentBone(Bone*);
     void setMassRatio(double);
     void setVector(const Vector&);
-    void setAngle(int index, double angle);
+    void setAngle(int index, int angle);
 
     // NOTE: add position must be called first
     void addPosition(double ts, QStringList values);

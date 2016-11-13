@@ -36,11 +36,11 @@ void NotchSensorSample::setOrientation(const BoneOrientation &o){
     m_orientation = o;
 }
 
-qreal NotchSensorSample::angle() const{
+int NotchSensorSample::angle() const{
     return m_angle;
 }
 
-void NotchSensorSample::setAngle(const qreal a){
+void NotchSensorSample::setAngle(const int a){
     m_angle = a;
 }
 

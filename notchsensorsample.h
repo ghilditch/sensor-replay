@@ -18,7 +18,7 @@ class NotchSensorSample : public QObject
     Q_PROPERTY(qreal q2 READ q2)
     Q_PROPERTY(qreal q3 READ q3)
     Q_PROPERTY(qreal q4 READ q4)
-    Q_PROPERTY(qreal angle READ angle WRITE setAngle NOTIFY angleChanged)
+    Q_PROPERTY(int angle READ angle WRITE setAngle NOTIFY angleChanged)
 
 public:
     explicit NotchSensorSample(QObject *parent = 0);
@@ -46,8 +46,8 @@ public:
     BoneOrientation orientation() const;
     void setOrientation(const BoneOrientation &);
 
-    qreal angle() const;
-    void setAngle(const qreal);
+    int angle() const;
+    void setAngle(const int);
 
 signals:
     void sensorNameChanged();
