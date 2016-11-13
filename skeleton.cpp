@@ -173,8 +173,8 @@ void Skeleton::postLoadProcessing(){
 
 void Skeleton::calculateAngleOfBone(Bone* bone){
     // Get the parent
-    Bone* parent = bone->parentBone();
-    if (parent != NULL && parent->isEnabled()){
+    Bone* parent = getEnabledParentBone(bone);
+    if (parent != NULL){
         int count = bone->getSampleCount();
         for (int index = 0; index < count; index++){
             const BonePosition& bpParent = parent->getSampleAt(index)->position();
@@ -194,6 +194,24 @@ void Skeleton::calculateAngleOfBone(Bone* bone){
 
         }
     }
+}
+
+Bone* Skeleton::getEnabledParentBone(Bone* bone){
+
+    Bone* parent = NULL;
+    // go back to find parent bone
+    do{
+        parent = bone->parentBone();
+        if (parent != NULL){
+            if (parent->isEnabled())
+                return parent;
+            else
+                bone = parent;
+        }
+
+    }while (parent != NULL);
+
+    return NULL;
 }
 
 Bone* Skeleton::getBoneFromName(const QString &n){
