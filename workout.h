@@ -13,6 +13,7 @@ class Workout : public QObject
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(QString date READ date WRITE setDate NOTIFY dateChanged)
     Q_PROPERTY(QString type READ type WRITE setType NOTIFY typeChanged)
+    Q_PROPERTY(int sampleCount READ sampleCount NOTIFY sampleCountChanged)
     Q_PROPERTY(int id READ id WRITE setId NOTIFY idChanged)
 
 public:
@@ -28,6 +29,8 @@ public:
 
     QString type() const;
     void setType(const QString &);
+
+    int sampleCount() const;
 
     int id() const;
     void setId(int);
@@ -49,12 +52,14 @@ signals:
     void dateChanged();
     void typeChanged();
     void idChanged();
+    void sampleCountChanged();
 
 private:
     int m_id;
     QString m_name;
     QString m_date;
     QString m_type;
+    int m_sampleCount;
     QList<SensorFile *> m_sensorfiles;
     NotchWorkout m_notchWorkout;
 };

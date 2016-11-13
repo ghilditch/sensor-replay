@@ -5,15 +5,19 @@
 #include <QDateTime>
 #include "boneposition.h"
 #include "boneorientation.h"
-#include "jointangle.h"
 
 class NotchSensorSample : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString sensorName READ sensorName WRITE setSensorName NOTIFY sensorNameChanged)
-    Q_PROPERTY(QDateTime timestamp READ timestamp WRITE setTimestamp NOTIFY timestampChanged)
-    Q_PROPERTY(BonePosition position READ position WRITE setPosition NOTIFY positionChanged)
-    Q_PROPERTY(BoneOrientation orientation READ orientation WRITE setOrientation NOTIFY orientationChanged)
+    Q_PROPERTY(double timestamp READ timestamp WRITE setTimestamp NOTIFY timestampChanged)
+    Q_PROPERTY(qreal pos_x READ pos_x)
+    Q_PROPERTY(qreal pos_y READ pos_y)
+    Q_PROPERTY(qreal pos_z READ pos_z)
+    Q_PROPERTY(qreal q1 READ q1)
+    Q_PROPERTY(qreal q2 READ q2)
+    Q_PROPERTY(qreal q3 READ q3)
+    Q_PROPERTY(qreal q4 READ q4)
     Q_PROPERTY(qreal angle READ angle WRITE setAngle NOTIFY angleChanged)
 
 public:
@@ -22,8 +26,19 @@ public:
     QString sensorName() const;
     void setSensorName(const QString &);
 
-    QDateTime timestamp() const;
-    void setTimestamp(const QDateTime &);
+    double timestamp() const;
+    void setTimestamp(double);
+
+    // Problem with QML allow direct access to position
+    qreal pos_x() const;
+    qreal pos_y() const;
+    qreal pos_z() const;
+
+    // Problem with QML allow direct access to orientation
+    qreal q1() const;
+    qreal q2() const;
+    qreal q3() const;
+    qreal q4() const;
 
     BonePosition position() const;
     void setPosition(const BonePosition &);
@@ -43,7 +58,7 @@ signals:
 
 private:
     QString m_sensorName;
-    QDateTime m_timestamp;
+    double m_timestamp;
     BonePosition m_position;
     BoneOrientation m_orientation;
     qreal m_angle;

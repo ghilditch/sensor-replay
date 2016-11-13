@@ -2,25 +2,17 @@ Qt.include("three.js")
 
 var camera, scene, renderer;
 
-var total_body_parts = 1;
-var body_part_cnt = 0;
-var body_parts = {
-    body: 0,
-    upperArmL: 1,
-    upperArmR: 2,
-    lowerArmL: 3,
-    lowerArmR: 4,
-    upperLegL: 5,
-    upperLegR: 6,
-    lowerLegL: 7,
-    lowerLegR: 8
-}
+// Meshes
+var athelete = null;
+var bone_helper = null;
 
-// Models
-var athelete = [null, null, null, null, null, null, null, null, null];
-var bone_helper;
+// Update type
+var updateByPosAndOrientation = false;
 
+// Math helper
 var ToRad = Math.PI / 180;
+
+// Main view
 var qmlView;
 
 function initializeGL(canvas, eventSource, mainView) {
@@ -72,9 +64,11 @@ function initializeGL(canvas, eventSource, mainView) {
     dirLight.shadow.camera.far = 3500;
     dirLight.shadow.bias = -0.0001;
 
+    // Create the floor
     createGrid();
 
-    //loadBikerMesh();
+    // Load the biker
+    loadBikerMesh();
 }
 
 var moveCamera = function (h,v,d) {
@@ -129,25 +123,20 @@ function addBikerToScene ( geometry, materials ) {
     materials.forEach (function (mat){
         mat.skinning = true;
       });
-    athelete[body_parts.body] = new THREE.SkinnedMesh( geometry, materials[0] );
-    athelete[body_parts.body].rotation.x = 90 * ToRad;
-    scene.add ( athelete[body_parts.body] );
+    athelete = new THREE.SkinnedMesh( geometry, materials[0] );
+    // Match notch reference rotation
+    athelete.rotation.x = 90 * ToRad;
+    //athelete.rotation.y = 90 * ToRad;
+    //athelete.rotation.z = 90 * ToRad;
+    scene.add ( athelete );
 
-    bone_helper = new THREE.SkeletonHelper(athelete[body_parts.body]);
+    // Add the bone helper
+    bone_helper = new THREE.SkeletonHelper(athelete);
     scene.add (bone_helper);
-    body_part_cnt++;
 };
 
 function onRotateCamera(value) {
     moveCamera (value, 110 , -5)
-}
-
-function onSpeedChanged(value) {
-    //daysPerFrameScale = value;
-}
-
-function setScale(value, focused) {
-
 }
 
 function setCameraDistance(distance) {
@@ -164,37 +153,46 @@ function onResizeGL(canvas) {
 
 function paintGL(canvas) {
 
-    //var timer = Date.now() * 0.0005;
-    //camera.position.x = Math.cos(timer) * 10;
-    //camera.position.z = Math.sin (timer) * 10;
-    //camera.lookAt ( scene.position );
+    if(isAtheleteLoaded()){
+        // Update the helper
+        bone_helper.update ();
+    }
 
-   //if( isAtheleteLoaded){
-   //    bone_helper.update ();
-   // }
-
+    // Render the scene
     renderer.render( scene, camera );
 }
 
 function isAtheleteLoaded(){
-    if( body_part_cnt === total_body_parts ){
+    if( athelete !== null && bone_helper !== null){
         return true;
     }else{
         return false;
     }
 }
 
-function updateMovement(body_part, x, y, z, q1, q2, q3, q4){
+function updateMovement(bone, x, y, z, q1, q2, q3, q4, angle){
 
-    //var pos = new THREE.Vector3(x, y, z)
-    //var quat = new THREE.Quaternion(q1, q2, q3, q4);
+    if (updateByPosAndOrientation){
+        updateMovementByPosAndOrientation (bone, x, y, z, q1, q2, q3, q4);
+    }else{
+        var b = getBone (bone);
+        setBoneAngle (b, angle);
+    }
+}
 
-    //console.log("update body part ", body_part);
+function updateMovementByPosAndOrientation(bone, x, y, z, q1, q2, q3, q4){
 
-    //athelete[body_part].position.copy(pos);
-    //athelete[body_part].quaternion.copy(quat);
+    var pos = new THREE.Vector3(x, y, z)
+    var quat = new THREE.Quaternion(q1, q2, q3, q4);
 
-    console.log("updated body part ", body_part);
+    var b = getBone (bone);
+    if (b === null){
+        console.log("Bone not found = ", bone);
+    }else{
+        console.log("update bone ", bone);
+        b.quaternion.copy(quat);
+        b.position.copy(pos);
+    }
 }
 
 function setBodyPosition(angleInRad){

@@ -87,62 +87,28 @@ Window {
     // Orientation
     property bool isPortrait: Screen.primaryOrientation === Qt.PortraitOrientation
 
+    BoneOrientation{
+
+    }
+    BoneOrientation{
+
+    }
+
     Workouts{
         id: workouts
-        onWorkoutLoaded :
-        {
-            updateWorkoutInfo(wo.name, wo.date, wo.type)
+        onWorkoutLoaded : {
+            updateWorkoutInfo(wo.name, wo.date, wo.type, wo.sampleCount)
             loading = false;
             workoutReady = true;
         }
-        onWorkoutLoadError :
-        {
+        onWorkoutLoadError : {
             info.workout = "Failed to load workout";
             loading = false;
         }
-
-        onMoveBody : {
-           GLCode.updateMovement(GLCode.body_parts.body, x, y, z, q1, q2, q3, q4);
-        }
-        onMoveupperArmL: {
-            GLCode.updateMovement(GLCode.body_parts.upperArmL,x, y, z, q1, q2, q3, q4);
-        }
-        onMoveupperArmR : {
-            GLCode.updateMovement(GLCode.body_parts.upperArmR,x, y, z, q1, q2, q3, q4);
-        }
-        onMoveforearmL: {
-            GLCode.updateMovement(GLCode.body_parts.lowerArmL,x, y, z, q1, q2, q3, q4);
-        }
-
-        onMoveforearmR: {
-            GLCode.updateMovement(GLCode.body_parts.lowerArmR,x, y, z, q1, q2, q3, q4);
-        }
-        onMovethighL: {
-            GLCode.updateMovement(GLCode.body_parts.upperLegL,x, y, z, q1, q2, q3, q4);
-        }
-        onMovethighR: {
-            GLCode.updateMovement(GLCode.body_parts.upperLegR,x, y, z, q1, q2, q3, q4);
-        }
-        onMoveshinL: {
-            GLCode.updateMovement(GLCode.body_parts.lowerLegL,x, y, z, q1, q2, q3, q4);
-        }
-        onMoveshinR: {
-            GLCode.updateMovement(GLCode.body_parts.lowerLegR,x, y, z, q1, q2, q3, q4);
-        }
-        onMoveHipToChestZ: {
-            GLCode.setBodyPosition(angle);
-        }
-        onMoveRightThighZ: {
-            GLCode.setRightThigh(angle);
-        }
-        onMoveLeftThighZ: {
-            GLCode.setLeftThigh(angle);
-        }
-        onMoveRightShinZ: {
-            GLCode.setRightShin(angle);
-        }
-        onMoveLeftShinZ: {
-            GLCode.setLeftShin(angle);
+        onUpdateMesh : {
+            GLCode.updateMovement (sample.sensorName,
+                                   sample.pos_x, sample.pos_y, sample.pos_z,
+                                   sample.q1, sample.q2, sample.q3, sample.q4, sample.angle);
         }
     }
 
@@ -164,10 +130,9 @@ Window {
 
         onPaintGL: {
             // Update the skeleton
-            if (workoutReady)
+            if (workoutReady && stateMachine.state === 'playing')
             {
-                // ToDo, update next frame
-                //updateSensorInfo();
+                workouts.getNextFrame (currentWorkoutId)
             }
             GLCode.paintGL(canvas3d);
             fpsDisplay.fps = canvas3d.fps;
@@ -205,9 +170,12 @@ Window {
             hoverEnabled: isHoverEnabled
             onClicked: {
                 if (stateMachine.state === 'paused' || stateMachine.state === 'stopped')
+                {
                     stateMachine.state = 'playing'
+                    workouts.startPlayback(currentWorkoutId)
+                }
                 else
-                    stateMachine.state = 'paused'
+                   stateMachine.state = 'paused'
             }
             onEntered: {
                 if (stateMachine.state === 'playing')
@@ -263,10 +231,11 @@ Window {
         workout: "Workout not opened"
     }
 
-    function updateWorkoutInfo(name, date, type){
+    function updateWorkoutInfo(name, date, type, sampleCount){
         info.width = 400;
         info.time = date
         info.workout = name;
+        info.sampleCount = sampleCount;
     }
 
      function updateSensorInfo() {
@@ -296,7 +265,7 @@ Window {
         color: "black"
         text: {
 
-            return "Rotation =" + rotateSlider.value + " degrees";
+            return "Rotation = " + rotateSlider.value + " degrees";
         }
     }
 
@@ -310,7 +279,11 @@ Window {
         stepSize: 0.5
         minimumValue: 0.5
         maximumValue: 2
-        onValueChanged: GLCode.setScale(value);
+        onValueChanged: {
+            if (currentWorkoutId !== -1){
+                workouts.setPlaybackSpeed(currentWorkoutId, scaleSlider.value)
+            }
+        }
     }
     Text {
         anchors.right: scaleSlider.left
@@ -322,7 +295,7 @@ Window {
         color: "black"
         text: {
 
-            return "Playback Speed =" + scaleSlider.value;
+            return "Playback Speed = " + scaleSlider.value;
         }
     }
 

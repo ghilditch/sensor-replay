@@ -1,56 +1,73 @@
 #include "notchsensorsample.h"
 
-NotchSensorSample::NotchSensorSample(QObject *parent) : QObject(parent)
-{
-
+NotchSensorSample::NotchSensorSample(QObject *parent) : QObject(parent){
+    m_angle = 0;
 }
 
-QString NotchSensorSample::sensorName() const
-{
+QString NotchSensorSample::sensorName() const{
     return m_sensorName;
 }
 
-void NotchSensorSample::setSensorName(const QString &s)
-{
+void NotchSensorSample::setSensorName(const QString &s){
     m_sensorName = s;
 }
 
-QDateTime NotchSensorSample::timestamp() const
-{
+double NotchSensorSample::timestamp() const{
     return m_timestamp;
 }
 
-void NotchSensorSample::setTimestamp(const QDateTime &t)
-{
+void NotchSensorSample::setTimestamp(double t){
     m_timestamp = t;
 }
 
-BonePosition NotchSensorSample::position() const
-{
+BonePosition NotchSensorSample::position() const{
     return m_position;
 }
 
-void NotchSensorSample::setPosition(const BonePosition &p)
-{
+void NotchSensorSample::setPosition(const BonePosition &p){
     m_position = p;
 }
 
-BoneOrientation NotchSensorSample::orientation() const
-{
+BoneOrientation NotchSensorSample::orientation() const{
     return m_orientation;
 }
 
-void NotchSensorSample::setOrientation(const BoneOrientation &o)
-{
+void NotchSensorSample::setOrientation(const BoneOrientation &o){
     m_orientation = o;
 }
 
-qreal NotchSensorSample::angle() const
-{
+qreal NotchSensorSample::angle() const{
     return m_angle;
 }
 
-void NotchSensorSample::setAngle(const qreal a)
-{
+void NotchSensorSample::setAngle(const qreal a){
     m_angle = a;
+}
+
+qreal NotchSensorSample::q1() const{
+    return m_orientation.q1();
+}
+
+qreal NotchSensorSample::q2() const{
+    return m_orientation.q2();
+}
+
+qreal NotchSensorSample::q3() const{
+    return m_orientation.q3();
+}
+
+qreal NotchSensorSample::q4() const{
+    return m_orientation.q4();
+}
+
+qreal NotchSensorSample::pos_x() const{
+    return m_position.pos_x();
+}
+
+qreal NotchSensorSample::pos_y() const{
+    return m_position.pos_y();
+}
+
+qreal NotchSensorSample::pos_z() const{
+    return m_position.pos_z();
 }

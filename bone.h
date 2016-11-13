@@ -2,28 +2,51 @@
 #define BONE_H
 #include <QObject>
 #include <QList>
-#include "boneposition.h"
-#include "boneorientation.h"
+#include "notchsensorsample.h"
+#include "vector.h"
 
 class Bone
 {
 public:
     Bone(const QString &);
+    ~Bone();
 
+    // Bone info
     bool isEnabled() const;
-    void setOffset(int offset);
-
-    void addPosition(double ts, QStringList values);
-    void addOrientation(double ts, QStringList values);
-    BonePosition getPositionAt(int index) const;
-    BoneOrientation getOrientationAt(int index) const;
+    bool isAngleEnabled() const;
     QString name() const;
+    Bone* parentBone() const;
+    double massRatio() const;
+    Vector vector() const;
+
+    // Per sample query
+    NotchSensorSample* getSampleAt(int index) const;
+
+    // Updates
+    void setOffset(int offset);
+    void setAngleOffset(int offset);
+    void setName(const QString&);
+    void setParentBone(Bone*);
+    void setMassRatio(double);
+    void setVector(const Vector&);
+
+    // NOTE: add position must be called first
+    void addPosition(double ts, QStringList values);
+
+    // Update only
+    void addOrientation(int index, QStringList values);
+    void addAngle(int index, QStringList values);
 
 private:
     int m_offset;
-    QList<BonePosition*> m_bonePositions;
-    QList<BoneOrientation*> m_boneOrientations;
+    int m_angleOffset;
     QString m_name;
+    Bone* m_parent;
+    double m_massRatio;
+    Vector m_vector;
+
+    // Samples
+    QList<NotchSensorSample*> m_samples;
 
 };
 

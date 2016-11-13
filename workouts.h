@@ -6,11 +6,14 @@
 #include "workout.h"
 #include "boneorientation.h"
 #include "boneposition.h"
+#include "notchsensorsample.h"
+#include "rendercontext.h"
 
-class Workouts : public QObject
+class Workouts : public QObject, RenderContext
 {
     Q_OBJECT
     Q_PROPERTY(QQmlListProperty<Workout> workouts READ workouts NOTIFY workoutsChanged)
+
 public:
     explicit Workouts(QObject *parent = 0);
     QQmlListProperty<Workout> workouts();
@@ -21,8 +24,12 @@ public:
     Q_INVOKABLE void loadWorkouts();
     Q_INVOKABLE void saveWorkouts();
 
-    // move the notch sample, forward or backwards
-    Q_INVOKABLE void moveNotchSample(int workoutId, const int step);
+    Q_INVOKABLE void setPlaybackSpeed(const int workoutId, qreal speed);
+    Q_INVOKABLE void startPlayback(int workoutId);
+    Q_INVOKABLE void getNextFrame(int workoutId);
+
+    // Render callback
+    void OnRenderNotchFrame(NotchSensorSample* sample);
 
 private:
     QList<Workout *> m_workouts;
@@ -37,54 +44,17 @@ private:
     // helpers
     Workout* getWorkoutById(int workoutId);
 
-    // movement processing
-    void moveBody(Workout* wo);
-    void upperArmL(Workout* wo);
-    void upperArmR(Workout* wo);
-    void forearmL(Workout* wo);
-    void forearmR(Workout* wo);
-    void thighL(Workout* wo);
-    void thighR(Workout* wo);
-    void shinL(Workout* wo);
-    void shinR(Workout* wo);
-
-    // Angle movement
-    void moveHipAngle(Workout* wo);
-    void moveNeckAngle(Workout* wo);
-    void moveupperArmRAngle(Workout* wo);
-    void moveupperArmLAngle(Workout* wo);
-    void moveforearmLAngle(Workout* wo);
-    void moveforearmRAngle(Workout* wo);
-    void movethighLAngle(Workout* wo);
-    void movethighRAngle(Workout* wo);
-    void moveshinLAngle(Workout* wo);
-    void moveshinRAngle(Workout* wo);
-
 signals:
+    // Workout events
     void workoutsChanged();
     void workoutLoaded(Workout* wo);
     void workoutLoadError();
 
-    // Body movements
-    void moveBody(qreal x, qreal y, qreal z, qreal q1, qreal q2, qreal q3, qreal q4);
-    void moveupperArmL(qreal x, qreal y, qreal z, qreal q1, qreal q2, qreal q3, qreal q4);
-    void moveupperArmR(qreal x, qreal y, qreal z, qreal q1, qreal q2, qreal q3, qreal q4);
-    void moveforearmL(qreal x, qreal y, qreal z, qreal q1, qreal q2, qreal q3, qreal q4);
-    void moveforearmR(qreal x, qreal y, qreal z, qreal q1, qreal q2, qreal q3, qreal q4);
-    void movethighL(qreal x, qreal y, qreal z, qreal q1, qreal q2, qreal q3, qreal q4);
-    void movethighR(qreal x, qreal y, qreal z, qreal q1, qreal q2, qreal q3, qreal q4);
-    void moveshinL(qreal x, qreal y, qreal z, qreal q1, qreal q2, qreal q3, qreal q4);
-    void moveshinR(qreal x, qreal y, qreal z, qreal q1, qreal q2, qreal q3, qreal q4);
+    // Body movement events
+    void updateMesh(NotchSensorSample* sample);
+    void lastFrameReached();
+    void playbackError();
 
-    // Body angles
-    void moveHipToChestZ(qreal angle);
-    void moveRightThighZ(qreal angle);
-    void moveLeftThighZ(qreal angle);
-    void moveRightShinZ(qreal angle);
-    void moveLeftShinZ(qreal angle);
-
-
-public slots:
 };
 
 #endif // WORKOUTS_H

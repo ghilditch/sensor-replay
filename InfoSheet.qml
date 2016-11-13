@@ -10,6 +10,7 @@ Rectangle {
 
     property alias workout: workoutText.name
     property alias time: infoText.time
+    property alias sampleCount: infoText.sampleCount
     property alias heartrate: infoText.heartrate
     property alias power: infoText.power
     property alias body_angle: infoText.body_angle
@@ -45,6 +46,7 @@ Rectangle {
         //anchors.horizontalCenter: parent.horizontalCenter
 
         property string time: ""
+        property int sampleCount: 0
         property string heartrate: ""
         property string power: ""
         property string body_angle: ""
@@ -63,6 +65,7 @@ Rectangle {
         text: {
 
                 "<p>Sample time:" + time + "</p></br>"
+                + "<p>Sample count:" + sampleCount + "</p></br>"
                 + "<p>Heart Rate:" + heartrate + "</p></br>"
                 + "<p>Power:" + power + "</p></br>"
                 + "<p>Body Angle:" + body_angle + "</p></br>"

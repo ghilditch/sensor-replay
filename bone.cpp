@@ -1,24 +1,71 @@
 #include <QDebug>
 #include "bone.h"
 
-Bone::Bone(const QString &name): m_name(name)
-{
+Bone::Bone(const QString &name): m_name(name), m_parent(NULL){
     m_offset = -1;
+    m_angleOffset = -1;
 }
 
-bool Bone::isEnabled() const
-{
+Bone::~Bone(){
+     foreach (NotchSensorSample* s, m_samples) {
+        delete s;
+     }
+}
+
+bool Bone::isEnabled() const{
     return (m_offset >= 0);
 }
 
-void Bone::setOffset(int offset)
-{
+bool Bone::isAngleEnabled() const{
+    return (m_angleOffset >= 0);
+}
+
+void Bone::setOffset(int offset){
     m_offset = offset;
 }
 
-QString Bone::name() const
-{
+void Bone::setAngleOffset(int offset){
+    m_angleOffset = offset;
+}
+
+QString Bone::name() const{
     return m_name;
+}
+
+Bone* Bone::parentBone() const{
+    return m_parent;
+}
+
+double Bone::massRatio() const{
+    return m_massRatio;
+}
+
+Vector Bone::vector() const{
+    return m_vector;
+}
+
+NotchSensorSample* Bone::getSampleAt(int index) const{
+    if (index <= 0 || index >= m_samples.count())
+        index = 0;
+
+    NotchSensorSample* s = m_samples.at(index);
+    return (s);
+}
+
+void Bone::setName(const QString&n){
+    m_name = n;
+}
+
+void Bone::setParentBone(Bone* b){
+    m_parent = b;
+}
+
+void Bone::setMassRatio(double mr){
+    m_massRatio = mr;
+}
+
+void Bone::setVector(const Vector& v){
+    m_vector = v;
 }
 
 void Bone::addPosition(double ts, QStringList values)
@@ -28,42 +75,52 @@ void Bone::addPosition(double ts, QStringList values)
     double z = values.at(m_offset+2).toDouble();
 
     //qDebug() << "loading bone position time=" << ts << " x=" << x << " y=" << y << " z=" << z;
-    BonePosition* bp = new BonePosition ();
-    bp->setPosition(ts, x, y, z);
-    m_bonePositions.append(bp);
+
+    // Create a new sample
+    NotchSensorSample* s = new NotchSensorSample();
+    s->setSensorName(m_name);
+    s->setTimestamp(ts);
+
+    // Create the position
+    BonePosition bp;
+    // Update the position
+    bp.setPosition(x, y, z);
+    // Update the sample
+    s->setPosition(bp);
+
+    // Add to list
+    m_samples.append(s);
 }
 
-void Bone::addOrientation(double ts, QStringList values)
-{
+void Bone::addOrientation(int index, QStringList values){
     double q1 = values.at(m_offset).toDouble();
     double q2 = values.at(m_offset+1).toDouble();
     double q3 = values.at(m_offset+2).toDouble();
     double q4 = values.at(m_offset+3).toDouble();
 
-    //qDebug() << "loading bone orientation time=" << ts << " q1=" << q1 << " q2=" << q2 << " q3=" << q3 << " q4=" << q4;
+    //qDebug() << "loading bone orientation index=" << index << " q1=" << q1 << " q2=" << q2 << " q3=" << q3 << " q4=" << q4;
 
-    BoneOrientation* bo = new BoneOrientation();
-    bo->setQuaternion(ts, q1, q2, q3, q4);
-    m_boneOrientations.append(bo);
+    BoneOrientation bo;
+    bo.setQuaternion(q1, q2, q3, q4);
+
+    // Get the sample
+    if (m_samples.count() > 0 && index < m_samples.count()){
+        // Update the sample
+        NotchSensorSample* s = m_samples.at(index);
+        s->setOrientation(bo);
+    }
 }
 
-BonePosition Bone::getPositionAt(int index) const
-{
-    if (index <= 0 || index >= m_bonePositions.size())
-        index = 0;
+void Bone::addAngle(int index, QStringList values){
+    // create a new joint angle
+    double angle = values.at(m_angleOffset).toDouble();
 
-    BonePosition* pbp = m_bonePositions.at(index);
-    // Avoid making a copy
-    BonePosition& bp = *pbp;
-    return (bp);
-}
+    //qDebug() << "loading joint bone=" << m_name << " index=" << index << " angle=" << angle;
 
-BoneOrientation Bone::getOrientationAt(int index) const
-{
-    if (index <= 0 || index >= m_boneOrientations.size())
-        index = 0;
-    BoneOrientation* pbo = m_boneOrientations.at(0);
-    // Avoid making a copy
-    BoneOrientation& bo = *pbo;
-    return (bo);
+    // Get the sample
+    if (m_samples.count() > 0 && index < m_samples.count()){
+        // Update the sample
+        NotchSensorSample* s = m_samples.at(index);
+        s->setAngle(angle);
+    }
 }

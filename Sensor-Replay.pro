@@ -10,13 +10,13 @@ SOURCES += main.cpp \
     sensorfile.cpp \
     notchworkout.cpp \
     bone.cpp \
-    joint.cpp \
     boneposition.cpp \
     boneorientation.cpp \
-    jointangle.cpp \
     csvreader.cpp \
-    point.cpp \
-    notchsensorsample.cpp
+    notchsensorsample.cpp \
+    skeleton.cpp \
+    vector.cpp \
+    playbackengine.cpp
 
 RESOURCES += qml.qrc
 
@@ -40,10 +40,11 @@ HEADERS += \
     sensorfile.h \
     notchworkout.h \
     bone.h \
-    joint.h \
     boneposition.h \
     boneorientation.h \
-    jointangle.h \
     csvreader.h \
-    point.h \
-    notchsensorsample.h
+    notchsensorsample.h \
+    skeleton.h \
+    vector.h \
+    rendercontext.h \
+    playbackengine.h
