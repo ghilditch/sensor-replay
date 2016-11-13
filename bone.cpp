@@ -114,6 +114,8 @@ void Bone::addOrientation(int index, QStringList values){
 void Bone::addAngle(int index, QStringList values){
     // create a new joint angle
     double angle = values.at(m_angleOffset).toDouble();
+    // Covert to radians
+    angle = Vector::degToRad(angle);
 
     //qDebug() << "loading joint bone=" << m_name << " index=" << index << " angle=" << angle;
 

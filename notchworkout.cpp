@@ -85,6 +85,9 @@ bool NotchWorkout::loadNotch(const QString &notchDir){
     // Now that notch is loaded, configure the playback engine
     m_playbackEngine.setSampleCount(m_sampleCount);
 
+    // Post processing
+    m_skeleton.postLoadProcessing();
+
     return true;
 }
 

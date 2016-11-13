@@ -53,6 +53,9 @@ public:
     void loadOrientationData(int index, const QString &);
     void loadAngleData(int index, const QString &);
 
+    // Post processing
+    void postLoadProcessing();
+
     // pop the next set of samples
     void popNextSetOfSamples(int index);
 

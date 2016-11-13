@@ -159,6 +159,10 @@ void Skeleton::loadAngleData(int index, const QString &row){
     }
 }
 
+void Skeleton::postLoadProcessing(){
+
+}
+
 Bone* Skeleton::getBoneFromName(const QString &n){
     foreach (Bone* b, m_bones) {
         if (b->name() == n)
