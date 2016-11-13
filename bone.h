@@ -22,6 +22,9 @@ public:
     // Per sample query
     NotchSensorSample* getSampleAt(int index) const;
 
+    // Sample count
+    int getSampleCount() const;
+
     // Updates
     void setOffset(int offset);
     void setAngleOffset(int offset);
@@ -29,6 +32,7 @@ public:
     void setParentBone(Bone*);
     void setMassRatio(double);
     void setVector(const Vector&);
+    void setAngle(int index, double angle);
 
     // NOTE: add position must be called first
     void addPosition(double ts, QStringList values);

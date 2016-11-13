@@ -160,7 +160,40 @@ void Skeleton::loadAngleData(int index, const QString &row){
 }
 
 void Skeleton::postLoadProcessing(){
+    for ( int i = 0; i < m_bones.count(); ++i ){
+        Bone* bone = m_bones.at(i);
+        if (bone->isEnabled()){
+            // If the angle was not loaded, calculate
+            if (!bone->isAngleEnabled()){
+                calculateAngleOfBone (bone);
+            }
+        }
+    }
+}
 
+void Skeleton::calculateAngleOfBone(Bone* bone){
+    // Get the parent
+    Bone* parent = bone->parentBone();
+    if (parent != NULL && parent->isEnabled()){
+        int count = bone->getSampleCount();
+        for (int index = 0; index < count; index++){
+            const BonePosition& bpParent = parent->getSampleAt(index)->position();
+            const BonePosition& bpBone = bone->getSampleAt(index)->position();
+
+            // create a couple of Vectors
+            Vector* a = new Vector(bpParent.pos_x(), bpParent.pos_y(), bpParent.pos_z());
+            Vector* b = new Vector(bpBone.pos_x(), bpBone.pos_y(), bpBone.pos_z());
+
+            // Get the angle
+            double angle = Vector::betaAngleZY(*a, *b);
+            bone->setAngle(index, angle);
+
+            // cleanup
+            delete a;
+            delete b;
+
+        }
+    }
 }
 
 Bone* Skeleton::getBoneFromName(const QString &n){

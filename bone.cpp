@@ -44,6 +44,10 @@ Vector Bone::vector() const{
     return m_vector;
 }
 
+int Bone::getSampleCount() const {
+    return m_samples.count();
+}
+
 NotchSensorSample* Bone::getSampleAt(int index) const{
     if (index <= 0 || index >= m_samples.count())
         index = 0;
@@ -108,6 +112,14 @@ void Bone::addOrientation(int index, QStringList values){
         // Update the sample
         NotchSensorSample* s = m_samples.at(index);
         s->setOrientation(bo);
+    }
+}
+
+void Bone::setAngle(int index, double angle){
+    if (m_samples.count() > 0 && index < m_samples.count()){
+        // Update the sample
+        NotchSensorSample* s = m_samples.at(index);
+        s->setAngle(angle);
     }
 }
 

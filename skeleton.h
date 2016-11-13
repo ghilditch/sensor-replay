@@ -64,6 +64,7 @@ public:
 
 private:
     void createBone(const QJsonObject &json);
+    void calculateAngleOfBone(Bone*);
     Bone* getBoneFromName(const QString &);
 
     // Calculate the angles based on the position
