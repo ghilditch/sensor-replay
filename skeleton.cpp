@@ -1,5 +1,6 @@
 #include "skeleton.h"
 #include <QJsonArray>
+#include <QDebug>
 
 Skeleton::Skeleton() : m_timeOffset(-1), m_renderer(NULL){
 }
@@ -165,7 +166,7 @@ void Skeleton::postLoadProcessing(){
         if (bone->isEnabled()){
             // If the angle was not loaded, calculate
             if (!bone->isAngleEnabled()){
-                calculateAngleOfBone (bone);
+                calculateAngleOfBoneWithLogic (bone);
             }
         }
     }
@@ -186,6 +187,11 @@ void Skeleton::calculateAngleOfBone(Bone* bone){
 
             // Get the angle
             double angle = Vector::betaAngleZY(*a, *b);
+
+            // detect direction
+            if (b->z() < a->z())
+                angle *= -1;
+
             bone->setAngle(index, angle);
 
             // cleanup
@@ -214,6 +220,21 @@ Bone* Skeleton::getEnabledParentBone(Bone* bone){
     return NULL;
 }
 
+void Skeleton::calculateAngleOfBoneWithLogic(Bone* bone){
+
+    // Let's do this systematically and build the sensors
+    if (bone->name() == CHEST_BOTTOM){
+        setHipAngles();
+    }else if (bone->name() == HEAD){
+    }else if (bone->name() == LEFT_THIGH){
+        setLeftThighAngles();
+    }else if (bone->name() == LEFT_UPPER_ARM){
+    }else if (bone->name() == RIGHT_THIGH){
+        setRightThighAngles();
+    }else if (bone->name() == RIGHT_UPPER_ARM){
+    }
+}
+
 Bone* Skeleton::getBoneFromName(const QString &n){
     foreach (Bone* b, m_bones) {
         if (b->name() == n)
@@ -222,83 +243,131 @@ Bone* Skeleton::getBoneFromName(const QString &n){
     return NULL;
 }
 
-double Skeleton::hipAngle(int index){
+void Skeleton::setHipAngles(){
     // Calculate the angle manually
     Bone* hipBone = getBoneFromName(HIP);
     if (hipBone == NULL || !hipBone->isEnabled())
-        return 0;
+        return;
     Bone* chestBone = getBoneFromName(CHEST_BOTTOM);
     if (chestBone == NULL || !chestBone->isEnabled())
-        return 0;
+        return;
+    Bone* tummyBone = getBoneFromName(TUMMY);
+    if (tummyBone == NULL)
+        return;
 
-    // Get the positions
-    const BonePosition& bpHip = hipBone->getSampleAt(index)->position();
-    const BonePosition& bpChest = chestBone->getSampleAt(index)->position();
 
-    // create a couple of Vectors
-    Vector* a = new Vector(bpHip.pos_x(), bpHip.pos_y(), bpHip.pos_z());
-    Vector* b = new Vector(bpChest.pos_x(), bpChest.pos_y(), bpChest.pos_z());
+    int count = chestBone->getSampleCount();
+    for (int index = 0; index < count; index++){
+        const BonePosition& bpParent = hipBone->getSampleAt(index)->position();
+        const BonePosition& bpBone = chestBone->getSampleAt(index)->position();
 
-    // Get the angle
-    double angle = Vector::betaAngleZY(*a, *b);
+        // create a couple of Vectors
+        Vector* a = new Vector(bpParent.pos_x(), bpParent.pos_y(), bpParent.pos_z());
+        Vector* b = new Vector(bpBone.pos_x(), bpBone.pos_y(), bpBone.pos_z());
 
-    // cleanup
-    delete a;
-    delete b;
+        // default to no bend
+        double angle = Vector::degToRad(0);
+        // detect direction
+        if (b->z() > a->z()){
+            // Get the angle
+            angle = Vector::alphaAngleZY(*a, *b);
+            // set the direction
+            //angle *= -1;
+        }else if(b->z() < a->z()){
+            angle = Vector::alphaAngleZY(*b, *a);
+            angle *= -1;
+        }
 
-    return angle;
+        // Set the angle and enable it
+        tummyBone->setAngle(index, angle);
+        tummyBone->setOffset(1);
+
+        // cleanup
+        delete a;
+        delete b;
+
+    }
 }
 
-double Skeleton::rThighAngle(int index){
+void Skeleton::setRightThighAngles(){
     // Calculate the angle manually
     Bone* hipBone = getBoneFromName(HIP);
     if (hipBone == NULL || !hipBone->isEnabled())
-        return 0;
+        return;
     Bone* thighBone = getBoneFromName(RIGHT_THIGH);
     if (thighBone == NULL || !thighBone->isEnabled())
-        return 0;
+        return;
 
-    // Get the positions
-    const BonePosition& bpHip = hipBone->getSampleAt(index)->position();
-    const BonePosition& bpThigh = thighBone->getSampleAt(index)->position();
+    int count = thighBone->getSampleCount();
+    for (int index = 0; index < count; index++){
+        const BonePosition& bpParent = hipBone->getSampleAt(index)->position();
+        const BonePosition& bpBone = thighBone->getSampleAt(index)->position();
 
-    // create a couple of Vectors
-    Vector* a = new Vector(bpHip.pos_x(), bpHip.pos_y(), bpHip.pos_z());
-    Vector* b = new Vector(bpThigh.pos_x(), bpThigh.pos_y(), bpThigh.pos_z());
+        // create a couple of Vectors
+        Vector* a = new Vector(bpParent.pos_x(), bpParent.pos_y(), bpParent.pos_z());
+        Vector* b = new Vector(bpBone.pos_x(), bpBone.pos_y(), bpBone.pos_z());
 
-    // Get the angle
-    double angle = Vector::betaAngleZY(*a, *b);
+        // default to no bend
+        double angle = Vector::degToRad(0);
+        // detect direction
+        if (b->z() > a->z()){
+            // Get the angle
+            angle = Vector::alphaAngleZY(*a, *b);
+            // set the direction
+            angle *= -1;
 
-    // cleanup
-    delete a;
-    delete b;
+        }else if(b->z() < a->z()){
+            angle = Vector::alphaAngleZY(*b, *a);
+        }
 
-    return angle;
+        // Set the angle
+        thighBone->setAngle(index, angle);
+
+        // cleanup
+        delete a;
+        delete b;
+
+    }
 }
 
-double Skeleton::lThighAngle(int index){
+void Skeleton::setLeftThighAngles(){
     // Calculate the angle manually
     Bone* hipBone = getBoneFromName(HIP);
     if (hipBone == NULL || !hipBone->isEnabled())
-        return 0;
+        return;
     Bone* thighBone = getBoneFromName(LEFT_THIGH);
     if (thighBone == NULL || !thighBone->isEnabled())
-        return 0;
+        return;
 
-    // Get the positions
-    const BonePosition& bpHip = hipBone->getSampleAt(index)->position();
-    const BonePosition& bpThigh = thighBone->getSampleAt(index)->position();
+    int count = thighBone->getSampleCount();
+    for (int index = 0; index < count; index++){
+        const BonePosition& bpParent = hipBone->getSampleAt(index)->position();
+        const BonePosition& bpBone = thighBone->getSampleAt(index)->position();
 
-    // create a couple of Vectors
-    Vector* a = new Vector(bpHip.pos_x(), bpHip.pos_y(), bpHip.pos_z());
-    Vector* b = new Vector(bpThigh.pos_x(), bpThigh.pos_y(), bpThigh.pos_z());
+        // create a couple of Vectors
+        Vector* a = new Vector(bpParent.pos_x(), bpParent.pos_y(), bpParent.pos_z());
+        Vector* b = new Vector(bpBone.pos_x(), bpBone.pos_y(), bpBone.pos_z());
 
-    // Get the angle
-    double angle = Vector::betaAngleZY(*a, *b);
+        // default to no bend
+        double angle = Vector::degToRad(0);
+        // detect direction
+        if (b->z() > a->z()){
+            // Get the angle
+            angle = Vector::alphaAngleZY(*a, *b);
+            // set the direction
+            angle *= -1;
+        }else if(b->z() < a->z()){
+            angle = Vector::alphaAngleZY(*b, *a);
+        }
 
-    // cleanup
-    delete a;
-    delete b;
+        //qDebug() << "set left thigh angle=" << Vector::radToDeg(angle) << " index=" << index;
 
-    return angle;
+        // Set the angle
+        thighBone->setAngle(index, angle);
+
+        // cleanup
+        delete a;
+        delete b;
+
+    }
 }

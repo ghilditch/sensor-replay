@@ -66,12 +66,13 @@ private:
     void createBone(const QJsonObject &json);
     void calculateAngleOfBone(Bone*);
     Bone* getEnabledParentBone(Bone*);
+    void calculateAngleOfBoneWithLogic(Bone*);
     Bone* getBoneFromName(const QString &);
 
     // Calculate the angles based on the position
-    double hipAngle(int index);
-    double rThighAngle(int index);
-    double lThighAngle(int index);
+    void setHipAngles();
+    void setRightThighAngles();
+    void setLeftThighAngles();
 
 private:
     // Bones

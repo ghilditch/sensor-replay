@@ -121,13 +121,41 @@ void Bone::setAngle(int index, double angle){
         NotchSensorSample* s = m_samples.at(index);
         s->setAngle(angle);
     }
+    else
+    {
+        // Add new sample
+        NotchSensorSample* s = new NotchSensorSample();
+        s->setSensorName(m_name);
+        s->setTimestamp(0);
+
+        // Create the position
+        BonePosition bp;
+        // Update the position
+        bp.setPosition(0, 0, 0);
+        BoneOrientation bo;
+        bo.setQuaternion(1, 0, 0, 0);
+        s->setOrientation(bo);
+        // Update the sample
+        s->setPosition(bp);
+        s->setAngle(angle);
+
+        // Add to list
+        m_samples.append(s);
+    }
 }
 
 void Bone::addAngle(int index, QStringList values){
     // create a new joint angle
     double angle = values.at(m_angleOffset).toDouble();
+
     // Covert to radians
     angle = Vector::degToRad(angle);
+
+    // Set direction depending on the bone
+    if (m_name.indexOf("Arm") >= 0){
+        angle *= -1;
+    }
+
 
     //qDebug() << "loading joint bone=" << m_name << " index=" << index << " angle=" << angle;
 

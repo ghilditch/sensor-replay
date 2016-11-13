@@ -42,15 +42,15 @@ void Vector::z(double z){
 }
 
 double Vector::distanceBetweenVectorsX (const Vector& a,const  Vector& b){
-    return std::abs(b.x() - a.y());
+    return std::abs(b.x() - a.x());
 }
 
 double Vector::distanceBetweenVectorsY (const Vector& a,const  Vector& b){
-    return std::abs(b.x() - a.y());
+    return std::abs(b.y() - a.y());
 }
 
 double Vector::distanceBetweenVectorsZ (const Vector& a,const  Vector& b){
-    return std::abs(b.x() - a.y());
+    return std::abs(b.z() - a.z());
 }
 
 double Vector::distanceBetweenVectors(const Vector& a,const  Vector& b){
