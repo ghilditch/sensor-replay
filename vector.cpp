@@ -87,3 +87,13 @@ double Vector::radToDeg(double rad){
 double Vector::degToRad(double deg){
     return deg / 180 * M_PI;
 }
+
+Vector Vector::getPointOnLine(double slope, const Vector& start, double length){
+
+    Vector point;
+    point.y(start.y() + (length * std::sin(Vector::degToRad(slope))));
+    point.z(start.z()+ (length * std::cos(Vector::degToRad(slope))));
+    point.x(0); // ignore the lateral movement
+    return point;
+}
+

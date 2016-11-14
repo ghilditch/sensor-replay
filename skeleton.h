@@ -71,6 +71,9 @@ private:
 
     // Calculate the angles based on the position
     void setHipAngles();
+    void setHeadAngles();
+    void setRightUpperArmAngles();
+    void setLeftUpperArmAngles();
     void setRightThighAngles();
     void setLeftThighAngles();
 

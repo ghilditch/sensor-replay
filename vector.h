@@ -35,6 +35,9 @@ public:
     static double radToDeg(double rad);
     static double degToRad(double deg);
 
+    // 2D movement
+    static Vector getPointOnLine(double slope, const Vector& start, double length);
+
 private:
     double m_x;
     double m_y;

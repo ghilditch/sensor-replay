@@ -227,12 +227,15 @@ void Skeleton::calculateAngleOfBoneWithLogic(Bone* bone){
     if (bone->name() == CHEST_BOTTOM){
         setHipAngles();
     }else if (bone->name() == HEAD){
+        setHeadAngles();
     }else if (bone->name() == LEFT_THIGH){
         setLeftThighAngles();
     }else if (bone->name() == LEFT_UPPER_ARM){
+        setLeftUpperArmAngles();
     }else if (bone->name() == RIGHT_THIGH){
         setRightThighAngles();
     }else if (bone->name() == RIGHT_UPPER_ARM){
+        setRightUpperArmAngles();
     }
 }
 
@@ -297,6 +300,18 @@ void Skeleton::setHipAngles(){
         delete b;
 
     }
+}
+
+void Skeleton::setHeadAngles(){
+
+}
+
+void Skeleton::setRightUpperArmAngles(){
+
+}
+
+void Skeleton::setLeftUpperArmAngles(){
+
 }
 
 void Skeleton::setRightThighAngles(){
