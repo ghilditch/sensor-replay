@@ -15,6 +15,9 @@ var ToRad = Math.PI / 180;
 // Main view
 var qmlView;
 
+// Materials
+var bikerMaterials = [];
+
 function initializeGL(canvas, eventSource, mainView) {
 
     qmlView = mainView;
@@ -120,10 +123,12 @@ function loadBikerMesh(){
 }
 
 function addBikerToScene ( geometry, materials ) {
-    materials.forEach (function (mat){
-        mat.skinning = true;
-      });
-    athelete = new THREE.SkinnedMesh( geometry, materials[0] );
+
+    // Create our own materials instead of those from Blender
+    createMaterials();
+    var material = new THREE.MeshFaceMaterial (bikerMaterials);
+
+    athelete = new THREE.SkinnedMesh( geometry, material );
     // Match notch reference rotation
     athelete.rotation.x = 90 * ToRad;
     //athelete.rotation.y = 90 * ToRad;
@@ -301,3 +306,51 @@ function getBone (name){
     return null;
 }
 
+function createMaterials(){
+    var alpha = .1;
+    var beta = .4;
+    var gamma = .1;
+
+    var specularShininess = Math.pow( 2, alpha * 10 );
+    var specularColour = new THREE.Color( beta * 0.2, beta * 0.2, beta * 0.2 );
+
+    var shoes = new THREE.Color("black");
+    var suit = new THREE.Color(beta * 0.2, beta * 0.2, beta * 0.2);
+    var skin = new THREE.Color(0xffcd94);
+
+    var material1 = new THREE.MeshPhongMaterial( {
+                color: shoes,
+                specular: specularColour,
+                reflectivity: beta,
+                shininess: specularShininess,
+                shading: THREE.SmoothShading,
+                envMap: null
+            } );
+    bikerMaterials.push (material1);
+
+
+    var material2 = new THREE.MeshPhongMaterial( {
+                color: skin,
+                specular: specularColour,
+                reflectivity: beta,
+                shininess: specularShininess,
+                shading: THREE.SmoothShading,
+                envMap: null
+            } );
+    bikerMaterials.push (material2);
+
+    var material3 = new THREE.MeshPhongMaterial( {
+                color: suit,
+                specular: specularColour,
+                reflectivity: beta,
+                shininess: specularShininess,
+                shading: THREE.SmoothShading,
+                envMap: null
+            } );
+    bikerMaterials.push (material3);
+
+
+    bikerMaterials.forEach (function (mat){
+        mat.skinning = true;
+    });
+}

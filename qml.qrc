@@ -3,15 +3,6 @@
         <file>Visualizer.qml</file>
         <file>visualizer.js</file>
         <file>three.js</file>
-        <file>models/body.json</file>
-        <file>models/lowerArm.L.json</file>
-        <file>models/lowerArm.R.json</file>
-        <file>models/lowerLeg.L.json</file>
-        <file>models/lowerLeg.R.json</file>
-        <file>models/upperArm.L.json</file>
-        <file>models/upperArm.R.json</file>
-        <file>models/upperLeg.L.json</file>
-        <file>models/upperLeg.R.json</file>
         <file>images/pausehoverpressed.png</file>
         <file>images/pausenormal.png</file>
         <file>images/playhoverpressed.png</file>
