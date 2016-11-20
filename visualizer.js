@@ -148,6 +148,7 @@ function setCameraDistance(distance) {
     //cameraDistance = distance;
 
 }
+
 function onResizeGL(canvas) {
     camera.aspect = canvas.width / canvas.height;
     camera.updateProjectionMatrix();
@@ -157,11 +158,6 @@ function onResizeGL(canvas) {
 }
 
 function paintGL(canvas) {
-
-    if(isAtheleteLoaded()){
-        // Update the helper
-        //bone_helper.update ();
-    }
 
     // Render the scene
     renderer.render( scene, camera );
@@ -177,11 +173,14 @@ function isAtheleteLoaded(){
 
 function updateMovement(bone, x, y, z, q1, q2, q3, q4, angle){
 
-    if (updateByPosAndOrientation){
-        updateMovementByPosAndOrientation (bone, x, y, z, q1, q2, q3, q4);
-    }else{
-        var b = getBone (bone);
-        setBoneAngle (b, angle);
+    if (isAtheleteLoaded()){
+        if (updateByPosAndOrientation){
+            updateMovementByPosAndOrientation (bone, x, y, z, q1, q2, q3, q4);
+        }else{
+            //console.log("update bone ", bone);
+            var b = getBone (bone);
+            setBoneAngle (b, angle);
+        }
     }
 }
 
@@ -194,46 +193,9 @@ function updateMovementByPosAndOrientation(bone, x, y, z, q1, q2, q3, q4){
     if (b === null){
         console.log("Bone not found = ", bone);
     }else{
-        console.log("update bone ", bone);
+        //console.log("update bone ", bone);
         b.quaternion.copy(quat);
         b.position.copy(pos);
-    }
-}
-
-function setBodyPosition(angleInRad){
-    console.log("updated body angle ", angleInRad);
-
-    var mtx = new THREE.Matrix4();
-    var mtx2 = new THREE.Matrix4();
-    var pos = new THREE.Vector3();
-    var quat = new THREE.Quaternion();
-
-    mtx.makeTranslation( 1, 1, 1);
-    var angle0 = angleInRad * .1 // 10 percent movement in hips
-    var angle1 = angleInRad - angle0; // the rest in the spine
-
-    mtx2.makeRotationX(angle0);
-    mtx.multiply( mtx2 );
-
-    pos.setFromMatrixPosition( mtx );
-    quat.setFromRotationMatrix( mtx );
-
-    var hips = getBone ('hips');
-    var spine = getBone ('spine');
-    var chest = getBone ('chest');
-
-    if (hips !== null){
-        hips.rotation.setFromRotationMatrix(mtx);
-    }
-
-    mtx2 = new THREE.Matrix4();
-    mtx.makeTranslation( 1, 1, 1);
-    mtx2.makeRotationX(angle1);
-    mtx.multiply( mtx2 );
-
-    if (spine !== null){
-        spine.rotation.setFromRotationMatrix(mtx);
-        //chest.rotation.setFromRotationMatrix(mtx);
     }
 }
 
@@ -254,47 +216,8 @@ function setBoneAngle(bone, angle){
 
     if (bone !== null){
         bone.rotation.setFromRotationMatrix(mtx);
+        //console.log("  angle bone ", angle);
     }
-}
-
-function setLeftUpperArm(angleInRad){
-    var b = getBone ('upper_arm.L');
-    setBoneAngle(b, angleInRad)
-}
-
-function setRightUpperArm(angleInRad){
-    var b = getBone ('upper_arm.R');
-    setBoneAngle(b, angleInRad)
-}
-
-function setLeftForearm(angleInRad){
-    var b = getBone ('forearm.L');
-    setBoneAngle(b, angleInRad)
-}
-
-function setRightForearm(angleInRad){
-    var b = getBone ('forearm.R');
-    setBoneAngle(b, angleInRad)
-}
-
-function setRightThigh(angleInRad){
-    var b = getBone ('thigh.R');
-    setBoneAngle(b, angleInRad)
-}
-
-function setLeftThigh(angleInRad){
-    var b = getBone ('thigh.L');
-    setBoneAngle(b, angleInRad)
-}
-
-function setRightShin(angleInRad){
-    var b = getBone ('shin.R');
-    setBoneAngle(b, angleInRad)
-}
-
-function setLeftShin(angleInRad){
-    var b = getBone ('shin.L');
-    setBoneAngle(b, angleInRad)
 }
 
 function getBone (name){

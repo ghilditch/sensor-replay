@@ -14,6 +14,8 @@ public:
     // Bone info
     bool isEnabled() const;
     bool isAngleEnabled() const;
+    bool hasData() const;
+    bool isDataCaptured() const;
     QString name() const;
     Bone* parentBone() const;
     double massRatio() const;
@@ -27,6 +29,7 @@ public:
 
     // Updates
     void setOffset(int offset);
+    void setEnabled(bool b);
     void setAngleOffset(int offset);
     void setName(const QString&);
     void setParentBone(Bone*);
@@ -44,6 +47,7 @@ public:
 private:
     int m_offset;
     int m_angleOffset;
+    bool m_enabled;
     QString m_name;
     Bone* m_parent;
     double m_massRatio;

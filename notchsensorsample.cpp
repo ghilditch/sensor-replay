@@ -12,6 +12,14 @@ void NotchSensorSample::setSensorName(const QString &s){
     m_sensorName = s;
 }
 
+int NotchSensorSample::index() const{
+    return m_index;
+}
+
+void NotchSensorSample::setIndex( int index){
+    m_index = index;
+}
+
 double NotchSensorSample::timestamp() const{
     return m_timestamp;
 }

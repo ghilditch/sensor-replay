@@ -41,6 +41,12 @@ void Vector::z(double z){
     m_z = z;
 }
 
+void Vector::setCoordinates(double x, double y, double z){
+    m_x = x;
+    m_y = y;
+    m_z = z;
+}
+
 double Vector::distanceBetweenVectorsX (const Vector& a,const  Vector& b){
     return std::abs(b.x() - a.x());
 }
@@ -61,23 +67,30 @@ double Vector::distanceBetweenVectors(const Vector& a,const  Vector& b){
     return distance;
 }
 
-double Vector::alphaAngleZY(const Vector& a,const  Vector& b){
-    // calculate the length of the smaller sides
-    double A = Vector::distanceBetweenVectorsZ(a, b);
-    double B = Vector::distanceBetweenVectorsY(a, b);
 
-    double angle = std::atan(A/B);
-    return angle;
 
+int Vector::alphaAngle(double legA, double legB){
+    double angle = std::atan(legA/legB);
+    return (int)Vector::radToDeg(angle);
 }
 
-double Vector::betaAngleZY(const Vector& a,const  Vector& b){
+int Vector::betaAngle(double legA, double legB){
+    double angle = std::atan(legB/legA);
+    return (int)Vector::radToDeg(angle);
+}
+
+int Vector::alphaAngleZY(const Vector& a,const  Vector& b){
     // calculate the length of the smaller sides
     double A = Vector::distanceBetweenVectorsZ(a, b);
     double B = Vector::distanceBetweenVectorsY(a, b);
+    return alphaAngle(A, B);
+}
 
-    double angle = std::atan(B/A);
-    return angle;
+int Vector::betaAngleZY(const Vector& a,const  Vector& b){
+    // calculate the length of the smaller sides
+    double A = Vector::distanceBetweenVectorsZ(a, b);
+    double B = Vector::distanceBetweenVectorsY(a, b);
+    return betaAngle(A, B);
 }
 
 double Vector::radToDeg(double rad){

@@ -10,6 +10,7 @@ class NotchSensorSample : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString sensorName READ sensorName WRITE setSensorName NOTIFY sensorNameChanged)
+    Q_PROPERTY(int index READ index WRITE setIndex)
     Q_PROPERTY(double timestamp READ timestamp WRITE setTimestamp NOTIFY timestampChanged)
     Q_PROPERTY(qreal pos_x READ pos_x)
     Q_PROPERTY(qreal pos_y READ pos_y)
@@ -25,6 +26,9 @@ public:
 
     QString sensorName() const;
     void setSensorName(const QString &);
+
+    int index() const;
+    void setIndex(int);
 
     double timestamp() const;
     void setTimestamp(double);
@@ -62,6 +66,7 @@ private:
     BonePosition m_position;
     BoneOrientation m_orientation;
     qreal m_angle;
+    int m_index;
 
 };
 

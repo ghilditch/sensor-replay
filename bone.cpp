@@ -4,6 +4,7 @@
 Bone::Bone(const QString &name): m_name(name), m_parent(NULL){
     m_offset = -1;
     m_angleOffset = -1;
+    m_enabled = false;
 }
 
 Bone::~Bone(){
@@ -12,8 +13,21 @@ Bone::~Bone(){
      }
 }
 
+void Bone::setEnabled(bool b){
+    m_enabled = b;
+}
+
 bool Bone::isEnabled() const{
-    return (m_offset >= 0);
+    return m_enabled;
+}
+
+
+bool Bone::isDataCaptured() const{
+    return (m_offset != -1);
+}
+
+bool Bone::hasData() const{
+    return (m_samples.count() > 0);
 }
 
 bool Bone::isAngleEnabled() const{
@@ -94,6 +108,9 @@ void Bone::addPosition(double ts, QStringList values)
 
     // Add to list
     m_samples.append(s);
+
+    // Set the index
+    s->setIndex(m_samples.count());
 }
 
 void Bone::addOrientation(int index, QStringList values){

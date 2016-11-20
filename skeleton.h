@@ -30,6 +30,8 @@
 #define RIGHT_FRONT_FOOT "RightFrontFoot"
 #define RIGHT_HEEL "RightHeel"
 #define ANGLE_SMOOTHING 0
+#define MAX_HIP_ANGLE 45
+#define CHEST_RISE_RATIO 0.02
 
 #include <QList>
 #include <QJsonObject>
@@ -64,18 +66,21 @@ public:
 
 private:
     void createBone(const QJsonObject &json);
-    void calculateAngleOfBone(Bone*);
     Bone* getEnabledParentBone(Bone*);
     void calculateAngleOfBoneWithLogic(Bone*);
     Bone* getBoneFromName(const QString &);
 
     // Calculate the angles based on the position
-    void setHipAngles();
+    void positionBodyWithAngles();
+
+    // Adjust the head and neck
     void setHeadAngles();
-    void setRightUpperArmAngles();
-    void setLeftUpperArmAngles();
-    void setRightThighAngles();
-    void setLeftThighAngles();
+
+    // Move the limbs
+    void setLimbAngle(const Vector& a, Bone* bone, int index, int offsetAngle);
+
+    // Helpers
+    int hipDropAngle(const Vector& a,const  Vector& b);
 
 private:
     // Bones

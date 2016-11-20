@@ -23,6 +23,8 @@ public:
     void y(double y);
     void z(double z);
 
+    void setCoordinates(double x, double y, double z);
+
     // distances
     static double distanceBetweenVectorsX (const Vector& a,const  Vector& b);
     static double distanceBetweenVectorsY (const Vector& a, const Vector& b);
@@ -30,8 +32,10 @@ public:
     static double distanceBetweenVectors (const Vector& a, const Vector& b);
 
     // angles
-    static double alphaAngleZY(const Vector& a,const  Vector& b);
-    static double betaAngleZY(const Vector& a,const  Vector& b);
+    static int alphaAngle(double legA, double legB);
+    static int betaAngle(double legA, double legB);
+    static int alphaAngleZY(const Vector& a,const  Vector& b);
+    static int betaAngleZY(const Vector& a,const  Vector& b);
     static double radToDeg(double rad);
     static double degToRad(double deg);
 

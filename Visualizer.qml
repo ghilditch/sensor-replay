@@ -109,6 +109,18 @@ Window {
             GLCode.updateMovement (sample.sensorName,
                                    sample.pos_x, sample.pos_y, sample.pos_z,
                                    sample.q1, sample.q2, sample.q3, sample.q4, sample.angle);
+            if (sample.sensorName === 'Hip'){
+                info.body_angle = sample.angle;
+                info.currentIndex = sample.index;
+            }else if(sample.sensorName === 'LeftForeArm'){
+                info.arm_angle_l = 180 - (sample.angle * -1);
+            }else if(sample.sensorName === 'LeftLowerLeg'){
+                info.leg_angle_l = 180 - sample.angle;
+            }else if(sample.sensorName === 'RightForeArm'){
+                info.arm_angle_r = 180 - (sample.angle * -1);
+            }else if(sample.sensorName === 'RightLowerLeg'){
+                info.leg_angle_r = 180 - sample.angle;
+            }
         }
     }
 
