@@ -44,6 +44,9 @@ public:
     void addOrientation(int index, QStringList values);
     void addAngle(int index, QStringList values);
 
+    // Data post-processing
+    void applyRollingMeanFilter();
+
 private:
     int m_offset;
     int m_angleOffset;

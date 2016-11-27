@@ -1,5 +1,6 @@
 #include <QDebug>
 #include "bone.h"
+#include "descriptivestatistics.h"
 
 Bone::Bone(const QString &name): m_name(name), m_parent(NULL){
     m_offset = -1;
@@ -178,4 +179,22 @@ void Bone::addAngle(int index, QStringList values){
         NotchSensorSample* s = m_samples.at(index);
         s->setAngle((int)angle);
     }
+}
+
+void Bone::applyRollingMeanFilter(){
+    // Create a descriptive statistics filter
+    DescriptiveStatistics stats;
+    // Set the window size (this is hard-coded to 40 samples per second)
+    stats.setWindowSize(40);
+
+    // Update the radians as we smooth the buffer
+    for (int i = 0; i < angles.count(); i++) {
+        // add to our stats
+        stats.addValue(s->radian());
+        // Get the current mean value of the window
+        double mean = stats.getMean();
+        // Replace the radian
+        m_samples.at(i)->setRadian(mean);
+    }
+
 }

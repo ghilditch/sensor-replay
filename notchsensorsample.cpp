@@ -1,4 +1,5 @@
 #include "notchsensorsample.h"
+#include "vector.h"
 
 NotchSensorSample::NotchSensorSample(QObject *parent) : QObject(parent){
     m_angle = 0;
@@ -50,6 +51,16 @@ int NotchSensorSample::angle() const{
 
 void NotchSensorSample::setAngle(const int a){
     m_angle = a;
+    // Auto update the radian
+    setRadian(Vector::degToRad(a));
+}
+
+qreal NotchSensorSample::radian() const{
+    return m_radian;
+}
+
+void NotchSensorSample::setRadian(const qreal r){
+    m_radian = r;
 }
 
 qreal NotchSensorSample::q1() const{

@@ -16,7 +16,15 @@ SOURCES += main.cpp \
     notchsensorsample.cpp \
     skeleton.cpp \
     vector.cpp \
-    playbackengine.cpp
+    playbackengine.cpp \
+    descriptivestatistics.cpp \
+    mean.cpp \
+    geometricmean.cpp \
+    max.cpp \
+    min.cpp \
+    sumofsquares.cpp \
+    sum.cpp \
+    sumoflogs.cpp
 
 RESOURCES += qml.qrc
 
@@ -47,4 +55,13 @@ HEADERS += \
     skeleton.h \
     vector.h \
     rendercontext.h \
-    playbackengine.h
+    playbackengine.h \
+    descriptivestatistics.h \
+    univariatestatistic.h \
+    mean.h \
+    geometricmean.h \
+    max.h \
+    min.h \
+    sumofsquares.h \
+    sum.h \
+    sumoflogs.h
