@@ -3,6 +3,8 @@
 #include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
+#include <QStandardPaths>
+#include <QDir>
 
 Workouts::Workouts(QObject *parent) : QObject(parent){
 }
@@ -74,7 +76,14 @@ void Workouts::OnRenderNotchFrame(NotchSensorSample* sample){
 }
 
 void Workouts::loadWorkouts(){
-    QFile loadFile(QStringLiteral("workouts.json"));
+
+#ifdef Q_OS_MAC
+    QString filename = QStringLiteral("/workouts.json");
+#else
+    QString filename = QStringLiteral("\\workouts.json");
+#endif
+
+    QFile loadFile(QDir::homePath() + filename);
 
     if (!loadFile.open(QIODevice::ReadOnly)) {
         qWarning("Couldn't open workout file.");

@@ -4,6 +4,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QDir>
 #include <qmath.h>
 
 #include "csvreader.h"
@@ -52,6 +53,7 @@ void NotchWorkout::processNextSample(){
 
 bool NotchWorkout::loadNotch(const QString &notchDir){ 
     QString skeleton = notchDir + "skeleton.js";
+    skeleton = QDir::toNativeSeparators(skeleton);
     if (!loadSkeleton(skeleton))    {
         qWarning("Couldn't open notch skeleton file.");
         return false;
@@ -59,24 +61,29 @@ bool NotchWorkout::loadNotch(const QString &notchDir){
 
     // build the path to the config directory
     QString config = notchDir + "config.js";
+    config = QDir::toNativeSeparators(config);
     if (!loadNotchConfig(config))    {
         qWarning("Couldn't open notch config file.");
-        return false;
+        return false;;
+
     }
 
     QString positions = notchDir + "positions.csv";
+    positions = QDir::toNativeSeparators(positions);
     if (!loadNotchPositions(positions))    {
         qWarning("Couldn't open notch positions file.");
         return false;
     }
 
     QString orientations = notchDir + "orientations.csv";
+    orientations = QDir::toNativeSeparators(orientations);
     if (!loadNotchOrientations(orientations))    {
         qWarning("Couldn't open notch orientations file.");
         return false;
     }
 
     QString angles = notchDir + "joint_angles.csv";
+    angles = QDir::toNativeSeparators(angles);
     if (!loadNotchAngles(angles))    {
         qWarning("Couldn't open notch angles file.");
         return false;

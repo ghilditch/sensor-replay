@@ -188,7 +188,8 @@ void Bone::applyRollingMeanFilter(){
     stats.setWindowSize(40);
 
     // Update the radians as we smooth the buffer
-    for (int i = 0; i < angles.count(); i++) {
+    for (int i = 0; i < m_samples.count(); i++) {
+        NotchSensorSample* s = m_samples.at(i);
         // add to our stats
         stats.addValue(s->radian());
         // Get the current mean value of the window

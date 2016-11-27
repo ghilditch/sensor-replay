@@ -54,8 +54,8 @@ public:
     int angle() const;
     void setAngle(const int);
 
-    int radian() const;
-    void setRadian(const int);
+    qreal radian() const;
+    void setRadian(const qreal);
 
 signals:
     void sensorNameChanged();
